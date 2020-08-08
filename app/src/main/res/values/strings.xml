@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LAMP</string>
+
+    <string name="login">SignIn</string>
+    <string name="signUp">SignUp</string>
+    <string name="farmer">Farmer</string>
+    <string name="wholeSeller">WholeSeller</string>
+    <string name="agent">Agent</string>
+    <string name="spinner_hint">Select Product Type</string>
+
+    <string name="verifysms">Waiting to automatically detect an SMS sent to</string>
+</resources>
