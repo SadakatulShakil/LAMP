@@ -40,7 +40,7 @@
         tools:targetApi="LOLLIPOP"
         android:prompt="@string/spinner_hint"
         android:background="@drawable/curve_spinner"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/uploadBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
@@ -63,7 +63,7 @@
         app:layout_constraintVertical_bias="0.169" />-->
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/uploadBt"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@drawable/curve"
