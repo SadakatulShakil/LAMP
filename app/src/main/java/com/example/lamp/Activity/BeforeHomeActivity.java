@@ -18,7 +18,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
     private Button btVerifyNext, btFillProfileNext;
     private ConstraintLayout profileLayout,verifyLayout;
-    private RadioGroup updateUserType;
     private String userType;
     private static final String TAG = "BeforeHomeActivity";
 
@@ -29,10 +28,14 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
         init();
 
+        Intent intent = getIntent();
+
+         userType = (String) intent.getSerializableExtra("userType");
+
         /*final Intent intent = getIntent();
         final String userType = intent.getStringExtra("userType");*/
 
-        updateUserType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+   /*     updateUserType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rbType1 = (RadioButton) updateUserType.findViewById(updateUserType.getCheckedRadioButtonId());
@@ -62,7 +65,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
 
         btVerifyNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +77,27 @@ public class BeforeHomeActivity extends AppCompatActivity {
             }
         });
 
+        btFillProfileNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userType.equals("Farmer")) {
+                    Intent intent = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(userType.equals("WholeSeller")){
+                    Intent intent = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(userType.equals("Agent")){
+                    Intent intent = new Intent(BeforeHomeActivity.this, AgentActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
 
+            }
+        });
     }
 
     private void init() {
@@ -83,6 +106,5 @@ public class BeforeHomeActivity extends AppCompatActivity {
         btFillProfileNext = findViewById(R.id.nextBtn);
         profileLayout = findViewById(R.id.fillProfileLayout);
         verifyLayout = findViewById(R.id.verifypLayout);
-        updateUserType = findViewById(R.id.typeOfUser);
     }
 }
