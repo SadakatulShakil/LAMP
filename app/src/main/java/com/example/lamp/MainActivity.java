@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.lamp.Activity.BeforeHomeActivity;
 import com.example.lamp.Activity.SignUpActivity;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText emailET, passwordET;
     private String device_name = "mobile";
     public static final String TAG ="signIn";
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         signinBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String email = emailET.getText().toString().trim();
                 String password = passwordET.getText().toString().trim();
 
@@ -67,9 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(Call<UserLogin> call, Response<UserLogin> response) {
                         Log.d(TAG, "onResponse: " + response.code());
                         if(response.code() == 200){
+                            progressBar.setVisibility(View.GONE);
                             UserLogin userLogin = response.body();
                             Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
-
+                          Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
+                          startActivity(intent);
+                          finish();
                         }
                     }
 
@@ -92,5 +99,6 @@ public class MainActivity extends AppCompatActivity {
         emailET = findViewById(R.id.userEmail);
         passwordET = findViewById(R.id.userPassword);
         signinBt = findViewById(R.id.signInBTN);
+        progressBar = findViewById(R.id.progressBar);
     }
 }

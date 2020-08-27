@@ -1,21 +1,14 @@
 package com.example.lamp.Api;
 
-import com.example.lamp.Login.LoginPojo;
+import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.Login.UserLogin;
-import com.example.lamp.Registration.Message;
-import com.example.lamp.Registration.RegistrationPojo;
 import com.example.lamp.Registration.UserRegistration;
 
-import java.util.List;
-
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
+import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface ApiInterface {
 
@@ -37,6 +30,10 @@ public interface ApiInterface {
             @Query("password") String password,
             @Query("device_name") String device_name
     );
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @POST("/api/mobile/auth-user/update")
+    Call<UpdateUserInfo> postByUpdateInfo(@Body UpdateUserInfo updateUserInfo);
 /*
     @GET()
     Call<List<UserPost>> getByPostUrl(

@@ -10,17 +10,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
+import com.example.lamp.MainActivity;
 import com.example.lamp.R;
-import com.example.lamp.Registration.Message;
-import com.example.lamp.Registration.RegistrationPojo;
 import com.example.lamp.Registration.UserRegistration;
-import com.google.android.gms.common.api.Api;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     private RadioGroup updateUserType;
     private String userType;
     public static final String TAG = "SignUp";
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 String name = nameTV.getText().toString().trim();
                 String phone = phoneTV.getText().toString().trim();
                 String email = emailTV.getText().toString().trim();
@@ -84,15 +84,14 @@ public class SignUpActivity extends AppCompatActivity {
                         public void onResponse(Call<UserRegistration> call, Response<UserRegistration> response) {
                             Log.d(TAG, "onResponse: " + response.code());
                             if(response.code() == 201){
-
+                                progressBar.setVisibility(View.GONE);
                                 UserRegistration userRegistration = response.body();
                                 Toast.makeText(SignUpActivity.this, "data inserted , Name is !" + userRegistration.getMessage().getName(), Toast.LENGTH_SHORT).show();
-
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
-                           /* Intent intent = new Intent(SignUpActivity.this, BeforeHomeActivity.class);
-                            intent.putExtra("userType", userType);
-                            startActivity(intent);
-                            finish();*/
+
                         }
 
                         @Override
@@ -119,6 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         passwordTV = findViewById(R.id.tvPassword);
         confirmPasswordTV = findViewById(R.id.tvRetypePassword);
+        progressBar = findViewById(R.id.progressBar);
     }
 
 }
