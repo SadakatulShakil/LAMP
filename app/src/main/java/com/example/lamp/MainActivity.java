@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                             UserLogin userLogin = response.body();
                             Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
                           Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
+                          intent.putExtra("loginResponse", userLogin);
                           startActivity(intent);
                           finish();
                         }

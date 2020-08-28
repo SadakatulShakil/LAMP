@@ -4,7 +4,9 @@ package com.example.lamp.FullUserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
 
     @SerializedName("location")
     @Expose
@@ -18,6 +20,9 @@ public class Address {
     @SerializedName("country")
     @Expose
     private String country;
+
+    public Address() {
+    }
 
     public Address(String location, String city, String zip, String country) {
         this.location = location;

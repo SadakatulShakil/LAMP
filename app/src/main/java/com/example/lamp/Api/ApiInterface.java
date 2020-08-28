@@ -15,12 +15,12 @@ public interface ApiInterface {
     @Headers("accept: application/json, content-type: multipart/form-data")
     @POST("/api/mobile/register")
     Call<UserRegistration> postByRgQuery(
-           @Query("name") String name,
-           @Query("phone") String phone,
-           @Query("email") String email,
-           @Query("type") String type,
-           @Query("password") String password,
-           @Query("password_confirmation") String password_confirmation
+            @Query("name") String name,
+            @Query("phone") String phone,
+            @Query("email") String email,
+            @Query("type") String type,
+            @Query("password") String password,
+            @Query("password_confirmation") String password_confirmation
     );
 
     @Headers("accept: application/json, content-type: multipart/form-data")
@@ -33,7 +33,15 @@ public interface ApiInterface {
 
     @Headers("accept: application/json, content-type: multipart/form-data")
     @POST("/api/mobile/auth-user/update")
-    Call<UpdateUserInfo> postByUpdateInfo(@Body UpdateUserInfo updateUserInfo);
+    Call<UpdateUserInfo> postByUpdateInfo(@Query("name") String name,
+                                          @Query("email") String email,
+                                          @Query("phone") String phone,
+                                          @Query("type") String type,
+                                          @Query("photo") String photo,
+                                          @Query("nid") String nid,
+                                          @Query("token") String token,
+                                          @Query("address") Object address
+    );
 /*
     @GET()
     Call<List<UserPost>> getByPostUrl(

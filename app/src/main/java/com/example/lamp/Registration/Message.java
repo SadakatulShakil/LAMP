@@ -4,7 +4,9 @@ package com.example.lamp.Registration;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
 
     @SerializedName("name")
     @Expose

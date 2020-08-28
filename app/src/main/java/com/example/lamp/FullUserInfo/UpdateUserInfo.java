@@ -4,7 +4,9 @@ package com.example.lamp.FullUserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UpdateUserInfo {
+import java.io.Serializable;
+
+public class UpdateUserInfo implements Serializable {
 
     @SerializedName("_id")
     @Expose
@@ -48,8 +50,14 @@ public class UpdateUserInfo {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
+    @SerializedName("token")
+    @Expose
+    private String token;
 
-    public UpdateUserInfo(String name, String phone, String email, String type, Address address, String photo, String nid) {
+    public UpdateUserInfo() {
+    }
+
+    public UpdateUserInfo(String name, String phone, String email, String type, Address address, String photo, String nid, String token) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -57,6 +65,7 @@ public class UpdateUserInfo {
         this.address = address;
         this.photo = photo;
         this.nid = nid;
+        this.token = token;
     }
 
     public String getId() {
@@ -171,4 +180,11 @@ public class UpdateUserInfo {
         this.updatedAt = updatedAt;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
