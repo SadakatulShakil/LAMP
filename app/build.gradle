@@ -47,5 +47,6 @@ dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     //facebook
     implementation 'com.facebook.android:facebook-login:[5,6)'
+    implementation 'org.apache.commons:commons-io:1.3.2'
 
 }

@@ -1,13 +1,19 @@
 package com.example.lamp.Api;
 
+import com.example.lamp.FullUserInfo.Address;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.Login.UserLogin;
 import com.example.lamp.Registration.UserRegistration;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
@@ -32,15 +38,20 @@ public interface ApiInterface {
     );
 
     @Headers("accept: application/json, content-type: multipart/form-data")
+    @Multipart
     @POST("/api/mobile/auth-user/update")
-    Call<UpdateUserInfo> postByUpdateInfo(@Query("name") String name,
-                                          @Query("email") String email,
-                                          @Query("phone") String phone,
-                                          @Query("type") String type,
-                                          @Query("photo") String photo,
-                                          @Query("nid") String nid,
-                                          @Query("token") String token,
-                                          @Query("address") Object address
+    Call<UpdateUserInfo> postByUpdateInfo(
+            @Header("Authorization") String token,
+            @Query("type") String type,
+            @Query("location") String location,
+            @Query("city") String city,
+            @Query("zip") String zip,
+            @Query("country") String country,
+            @Query("phone") String phone,
+            @Query("email") String email,
+            @Part MultipartBody.Part photoFile,
+            @Part MultipartBody.Part nidFile,
+            @Query("name") String name
     );
 /*
     @GET()

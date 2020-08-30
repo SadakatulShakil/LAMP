@@ -3,8 +3,10 @@ package com.example.lamp.Activity;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,10 +27,14 @@ import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.FullUserInfo.Address;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.Login.UserLogin;
-import com.example.lamp.MainActivity;
 import com.example.lamp.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +53,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
     Address address;
     UpdateUserInfo updateUserInfo;
     UserLogin userLoginResponse;
-
+    Intent nidIntent, proIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +65,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userLoginResponse = (UserLogin) intent.getSerializableExtra("loginResponse");
         Log.d(TAG, "onCreate: " + userLoginResponse.getToken());
-        // userType = (String) intent.getSerializableExtra("userType");
-
-        /*final Intent intent = getIntent();
-        final String userType = intent.getStringExtra("userType");*/
 
         updateUserType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -72,38 +75,22 @@ public class BeforeHomeActivity extends AppCompatActivity {
                 Toast.makeText(BeforeHomeActivity.this, userType+ " is Clicked!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreate: " +userType);
 
-               /* btFillProfileNext.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(userType.equals("Farmer")){
-                            Intent intent = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if(userType.equals("WholeSeller")){
-                            Intent intent = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if(userType.equals("Agent")){
-                            Intent intent = new Intent(BeforeHomeActivity.this, AgentActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                });*/
             }
         });
 
-      /*  btVerifyNext.setOnClickListener(new View.OnClickListener() {
+      proImageView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              ChooseProfileImage();
+          }
+      });
+
+        nidImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BeforeHomeActivity.this, "Number Verified", Toast.LENGTH_SHORT).show();
-                profileLayout.setVisibility(View.VISIBLE);
-                verifyLayout.setVisibility(View.GONE);
-
+                ChooseNidImage();
             }
-        });*/
+        });
 
         btFillProfileNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,15 +107,25 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                 address = new Address(location, city, zip, country);
 
-                String photo = profileImageUri + "." + "jpg";
-                String nid = nidImageUri + "." + "jpg";
+                /*String photo = profileImageUri + "." + "jpg";
+                String nid = nidImageUri + "." + "jpg";*/
+                File File1  = new File(profileImageUri.getPath());
+                File file2  = new File(nidImageUri.getPath());
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), File1);
+                MultipartBody.Part photoFile = MultipartBody.Part.createFormData("file", File1.getName(), requestBody);
+                Log.d(TAG, "onClick: "+photoFile.toString());
+
+                RequestBody requestBody1 = RequestBody.create(MediaType.parse("*/*"), file2);
+                MultipartBody.Part nidFile = MultipartBody.Part.createFormData("file", file2.getName(), requestBody1);
+
                 String token = userLoginResponse.getToken();
 
                 Retrofit retrofit = RetrofitClient.getRetrofitClient();
 
                 ApiInterface api = retrofit.create(ApiInterface.class);
 
-                Call<UpdateUserInfo> call = api.postByUpdateInfo(name,email,phone,type,photo,nid,token,address);
+                Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type,location,city,zip,country, phone, email, photoFile, nidFile, name);
 
                 call.enqueue(new Callback<UpdateUserInfo>() {
                     @Override
@@ -164,52 +161,52 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
             }
         });
-        proImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser1();
-            }
-        });
-        nidImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser2();
-            }
-        });
 
     }
 
-    private void openFileChooser1() {
+    ///////////Functionally////////////
 
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, 1);
+    private void ChooseProfileImage() {
+        proIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        proIntent.setType("*/*");
+        startActivityForResult(proIntent,1);
     }
-    private void openFileChooser2() {
 
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, 2);
+    private void ChooseNidImage() {
+        nidIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        nidIntent.setType("*/*");
+        startActivityForResult(nidIntent,2);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult: "+"Activity result success");
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            profileImageUri = data.getData();
-            Picasso.get().load(profileImageUri).into(proImageView);
+        switch(requestCode){
 
-        }else if(requestCode == 2 && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
-            nidImageUri = data.getData();
-            Picasso.get().load(nidImageUri).into(nidImageView);
+            case 1:
+                if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                    profileImageUri = data.getData();
+                    String path1 = profileImageUri.getPath();
+                    String filename=path1.substring(path1.lastIndexOf("/")+1);
+                    Log.d(TAG, "onActivityResult: " + "profile: "+ filename);
+                    Picasso.get().load(profileImageUri).into(proImageView);
+
+                }
+                break;
+
+            case 2:
+                if(resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
+                    nidImageUri = data.getData();
+                    String path2 = nidImageUri.getPath();
+                    String filename=path2.substring(path2.lastIndexOf("/")+1);
+                    Log.d(TAG, "onActivityResult: "+"Nid: "+nidImageUri.toString());
+                    Picasso.get().load(nidImageUri).into(nidImageView);
+                }
+                break;
         }
     }
 
-    public String getFileExtension(Uri ImageUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(ImageUri));
-    }
 
     private void init() {
 
