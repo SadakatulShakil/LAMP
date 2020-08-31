@@ -49,8 +49,8 @@ public interface ApiInterface {
             @Query("country") String country,
             @Query("phone") String phone,
             @Query("email") String email,
-            @Part MultipartBody.Part photoFile,
-            @Part MultipartBody.Part nidFile,
+            @Part("image\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
+            @Part("image\"; filename=\"myNid.jpg\" ") RequestBody nidFile,
             @Query("name") String name
     );
 /*
