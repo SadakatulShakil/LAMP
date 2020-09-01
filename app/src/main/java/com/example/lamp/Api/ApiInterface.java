@@ -1,14 +1,12 @@
 package com.example.lamp.Api;
 
-import com.example.lamp.FullUserInfo.Address;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.Login.UserLogin;
 import com.example.lamp.Registration.UserRegistration;
 
 import retrofit2.Call;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.Headers;
@@ -52,6 +50,18 @@ public interface ApiInterface {
             @Part("image\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
             @Part("image\"; filename=\"myNid.jpg\" ") RequestBody nidFile,
             @Query("name") String name
+    );
+
+    @Headers("accept: application/json")
+    @GET("api/mobile/auth-user")
+    Call<UpdateUserInfo> getByAuthQuery(
+            @Header("Authorization") String token
+    );
+
+    @Headers("accept: application/json")
+    @POST("api/mobile/logout")
+    Call<UpdateUserInfo> postByLogOutQuery(
+            @Header("Authorization") String token
     );
 /*
     @GET()

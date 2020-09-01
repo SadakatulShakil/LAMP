@@ -1,9 +1,8 @@
 package com.example.lamp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.lamp.Activity.BeforeHomeActivity;
 import com.example.lamp.Activity.SignUpActivity;
@@ -36,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-
         dToolbar.setTitle(getString(R.string.login));
         dToolbar.setNavigationIcon(R.drawable.ic_arrow);
-
         signUpBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
                         if(response.code() == 200){
                             progressBar.setVisibility(View.GONE);
                             UserLogin userLogin = response.body();
+                            SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                            preferences.edit().putString("TOKEN",userLogin.getToken()).apply();
+                            preferences.edit().putString("type", userLogin.getUser().getType()).apply();
+
                             Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
                           Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
                           intent.putExtra("loginResponse", userLogin);

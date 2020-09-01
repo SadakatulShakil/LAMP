@@ -135,7 +135,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                         RequestBody requestBody = RequestBody.create(MediaType.parse(getContentResolver().getType(profileImageUri)), profileFile);
                         Log.d(TAG, "onClick: "+profileFile);
 
-                        nidFile = new File(getRealPathFromURI(nidImageUri));
+                        nidFile = new File(result);
                         RequestBody requestBody1 = RequestBody.create(MediaType.parse(getContentResolver().getType(nidImageUri)), nidFile);
 
 
@@ -145,7 +145,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                         ApiInterface api = retrofit.create(ApiInterface.class);
 
-                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type,location,city,zip,country, phone, email, requestBody, requestBody, name);
+                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type,location,city,zip,country, phone, email, requestBody, requestBody1, name);
 
                         call.enqueue(new Callback<UpdateUserInfo>() {
                             @Override
@@ -164,7 +164,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                         Intent intent = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
                                         startActivity(intent);
                                         finish();
-                                    }else if(updateUserInfo.getType().equals("WholeSeller")){
+                                    }else if(updateUserInfo.getType().equals("Agent")){
                                         Intent intent = new Intent(BeforeHomeActivity.this, AgentActivity.class);
                                         startActivity(intent);
                                         finish();
