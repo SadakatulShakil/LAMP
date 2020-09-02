@@ -48,10 +48,10 @@ public interface ApiInterface {
             @Query("country") String country,
             @Query("phone") String phone,
             @Query("email") String email,
-           /* @Part("image\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
-            @Part("image\"; filename=\"myNid.jpg\" ") RequestBody nidFile,*/
-            @Part("photo") RequestBody photoFile,
-            @Part("nid") RequestBody nidFile,
+            @Part("photo\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
+            @Part("nid\"; filename=\"myNid.jpg\" ") RequestBody nidFile,
+            /*@Part("photo") RequestBody photoFile,
+            @Part("nid") RequestBody nidFile,*/
             @Query("name") String name
     );
 

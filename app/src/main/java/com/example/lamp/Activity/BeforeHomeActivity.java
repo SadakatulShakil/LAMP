@@ -120,16 +120,16 @@ public class BeforeHomeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                       /* String name = nameET.getText().toString().trim();
+                        String name = nameET.getText().toString().trim();
                         String email = emailET.getText().toString().trim();
                         String phone = phoneET.getText().toString().trim();
                         String type = userType;
                         String location = locationET.getText().toString().trim();
                         String city = cityET.getText().toString().trim();
                         String zip = zipET.getText().toString().trim();
-                        String country = countryET.getText().toString().trim();*/
+                        String country = countryET.getText().toString().trim();
 
-                        String name = "Sabuj Islam";
+                        /*String name = "Sabuj Islam";
                         String email = "sabuj0338@gmail.com";
                         String phone = "01767564737";
                         String type = "farmer";
@@ -137,7 +137,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                         String city = "Dhanmondi";
                         String zip = "1207";
                         String country = "Bangladesh";
-
+*/
                         address = new Address(location, city, zip, country);
 
                         profileFile = new File(result);
@@ -164,16 +164,17 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                 if(response.code() == 200){
 
                                     UpdateUserInfo updateUserInfo = response.body();
-                                    Toast.makeText(BeforeHomeActivity.this, "User Name: "+updateUserInfo.getName(), Toast.LENGTH_SHORT).show();
-                                    if(updateUserInfo.getType().equals("Farmer")){
+                                    Toast.makeText(BeforeHomeActivity.this, "User Name: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
+                                    if(updateUserInfo.getType().equals("farmer")){
                                         Intent intent = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
+                                        intent.putExtra("userData",updateUserInfo);
                                         startActivity(intent);
                                         finish();
-                                    }else if(updateUserInfo.getType().equals("WholeSeller")){
+                                    }else if(updateUserInfo.getType().equals("wholeseller")){
                                         Intent intent = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
                                         startActivity(intent);
                                         finish();
-                                    }else if(updateUserInfo.getType().equals("Agent")){
+                                    }else if(updateUserInfo.getType().equals("agent")){
                                         Intent intent = new Intent(BeforeHomeActivity.this, AgentActivity.class);
                                         startActivity(intent);
                                         finish();
