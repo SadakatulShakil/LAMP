@@ -1,6 +1,7 @@
 package com.example.lamp.Api;
 
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
+import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
 import com.example.lamp.Registration.UserRegistration;
 
@@ -47,8 +48,10 @@ public interface ApiInterface {
             @Query("country") String country,
             @Query("phone") String phone,
             @Query("email") String email,
-            @Part("image\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
-            @Part("image\"; filename=\"myNid.jpg\" ") RequestBody nidFile,
+           /* @Part("image\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
+            @Part("image\"; filename=\"myNid.jpg\" ") RequestBody nidFile,*/
+            @Part("photo") RequestBody photoFile,
+            @Part("nid") RequestBody nidFile,
             @Query("name") String name
     );
 
@@ -60,7 +63,7 @@ public interface ApiInterface {
 
     @Headers("accept: application/json")
     @POST("api/mobile/logout")
-    Call<UpdateUserInfo> postByLogOutQuery(
+    Call<String> postByLogOutQuery(
             @Header("Authorization") String token
     );
 /*

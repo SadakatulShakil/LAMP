@@ -66,6 +66,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onCreate: "+"token: "+retrievedToken + "\ntype: "+retrieveType);
 
+
                 if(retrievedToken != null
                         && retrieveType.equals("farmer")){
                     Retrofit retrofit = RetrofitClient.getRetrofitClient();
@@ -88,6 +89,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
                             Toast.makeText(SplashActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onFailure: " +t.getMessage());
 
                         }
                     });

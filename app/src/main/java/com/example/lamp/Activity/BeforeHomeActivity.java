@@ -120,23 +120,32 @@ public class BeforeHomeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        String name = nameET.getText().toString().trim();
+                       /* String name = nameET.getText().toString().trim();
                         String email = emailET.getText().toString().trim();
                         String phone = phoneET.getText().toString().trim();
                         String type = userType;
                         String location = locationET.getText().toString().trim();
                         String city = cityET.getText().toString().trim();
                         String zip = zipET.getText().toString().trim();
-                        String country = countryET.getText().toString().trim();
+                        String country = countryET.getText().toString().trim();*/
+
+                        String name = "Sabuj Islam";
+                        String email = "sabuj0338@gmail.com";
+                        String phone = "01767564737";
+                        String type = "farmer";
+                        String location = "Dhaka";
+                        String city = "Dhanmondi";
+                        String zip = "1207";
+                        String country = "Bangladesh";
 
                         address = new Address(location, city, zip, country);
 
                         profileFile = new File(result);
-                        RequestBody requestBody = RequestBody.create(MediaType.parse(getContentResolver().getType(profileImageUri)), profileFile);
-                        Log.d(TAG, "onClick: "+profileFile);
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), profileFile);
+                        Log.d(TAG, "onClick: "+requestBody.toString());
 
                         nidFile = new File(result);
-                        RequestBody requestBody1 = RequestBody.create(MediaType.parse(getContentResolver().getType(nidImageUri)), nidFile);
+                        RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/octet-stream"), nidFile);
 
 
                         String token = userLoginResponse.getToken();
@@ -145,7 +154,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                         ApiInterface api = retrofit.create(ApiInterface.class);
 
-                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type,location,city,zip,country, phone, email, requestBody, requestBody1, name);
+                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type, location, city, zip, country, phone, email, requestBody, requestBody1, name);
 
                         call.enqueue(new Callback<UpdateUserInfo>() {
                             @Override
@@ -265,8 +274,8 @@ public class BeforeHomeActivity extends AppCompatActivity {
                     String profilePath = Environment.getExternalStorageDirectory().toString() + path1;
                     Log.d(TAG, "onActivityResult: " + "profile: "+ profilePath);
                     profileFile = new File(profilePath);
-                    nickProPath = profileFile.getName();
-                    Log.d(TAG, "onActivityResult: "+nickProPath);*/
+                    nickProPath = profileFile.getName();*/
+                    Log.d(TAG, "onActivityResult: "+profileImageUri);
                     Picasso.get().load(profileImageUri).into(proImageView);
 
                 }

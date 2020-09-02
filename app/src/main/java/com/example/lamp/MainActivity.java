@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                             preferences.edit().putString("TOKEN",userLogin.getToken()).apply();
                             preferences.edit().putString("type", userLogin.getUser().getType()).apply();
 
+                            Log.d(TAG, "onResponse: "+userLogin.getToken());
                             Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
                           Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
                           intent.putExtra("loginResponse", userLogin);

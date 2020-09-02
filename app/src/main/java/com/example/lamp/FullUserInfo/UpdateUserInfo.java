@@ -57,6 +57,10 @@ public class UpdateUserInfo implements Serializable {
     public UpdateUserInfo() {
     }
 
+    public UpdateUserInfo(String token) {
+        this.token = token;
+    }
+
     public UpdateUserInfo(String name, String phone, String email, String type, Address address, String photo, String nid, String token) {
         this.name = name;
         this.phone = phone;

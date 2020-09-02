@@ -20,6 +20,7 @@ import com.example.lamp.Adapter.productTypeAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
+import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.MainActivity;
 import com.example.lamp.Model.productType;
 import com.example.lamp.R;
@@ -49,7 +50,7 @@ public class FarmerActivity extends AppCompatActivity {
 
         initList();
         initView();
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         updateUserInfo = (UpdateUserInfo) intent.getSerializableExtra("userData");
         SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken  = preferences.getString("TOKEN",null);
@@ -82,31 +83,30 @@ public class FarmerActivity extends AppCompatActivity {
 
                 ApiInterface api = retrofit.create(ApiInterface.class);
 
-                Call<UpdateUserInfo> call = api.postByLogOutQuery("Bearer "+ retrievedToken);
+                Call<String> call = api.postByLogOutQuery("Bearer "+ retrievedToken);
 
-                call.enqueue(new Callback<UpdateUserInfo>() {
-                    @Override
-                    public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
-                        Log.d(TAG, "onResponse: " +"responseCode: "+ response.code());
-                        if(response.code() == 200){
-                            UpdateUserInfo updateUserInfo = response.body();
+               call.enqueue(new Callback<String>() {
+                   @Override
+                   public void onResponse(Call<String> call, Response<String> response) {
+                       Log.d(TAG, "onResponse: " +response.code());
+                       if(response.code() == 200){
+                            /*UserLogOut userLogOut = response.body();*/
+                           SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                           preferences.edit().putString("TOKEN",null).apply();
+                           Log.d(TAG, "onResponse: " +response.body());
+                           Intent intent1 = new Intent(FarmerActivity.this, MainActivity.class);
+                           startActivity(intent1);
+                           finish();
+                           Toast.makeText(FarmerActivity.this, "response: "+ response.body(), Toast.LENGTH_LONG).show();
+                       }
+                   }
 
-                            Log.d(TAG, "onResponse: "+ response.body());
-                            Toast.makeText(FarmerActivity.this, "Response" +updateUserInfo.getToken(), Toast.LENGTH_SHORT).show();
-                            Intent intent =  new Intent(FarmerActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
-                        Toast.makeText(FarmerActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onFailure: "+"message: "+ t.getMessage());
-
-                    }
-                });
-
+                   @Override
+                   public void onFailure(Call<String> call, Throwable t) {
+                       Log.d(TAG, "onFailure: "+ t.getMessage());
+                       Toast.makeText(FarmerActivity.this, "Failure: "+ t.getMessage(), Toast.LENGTH_LONG).show();
+                   }
+               });
             }
         });
     }
