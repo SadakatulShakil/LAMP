@@ -45,6 +45,7 @@ import java.io.IOException;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,15 +75,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
         init();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + getPackageName()));
-            finish();
-            startActivity(intent);
-            return;
-        }
+        requestPermission();
 
         Intent intent = getIntent();
         userLoginResponse = (UserLogin) intent.getSerializableExtra("loginResponse");
@@ -100,12 +93,12 @@ public class BeforeHomeActivity extends AppCompatActivity {
             }
         });
 
-      proImageView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              ChooseProfileImage();
-          }
-      });
+        proImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseProfileImage();
+            }
+        });
 
         nidImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +107,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkPermission()) {
                 btFillProfileNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -129,15 +120,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
                         String zip = zipET.getText().toString().trim();
                         String country = countryET.getText().toString().trim();
 
-                        /*String name = "Sabuj Islam";
-                        String email = "sabuj0338@gmail.com";
-                        String phone = "01767564737";
-                        String type = "farmer";
-                        String location = "Dhaka";
-                        String city = "Dhanmondi";
-                        String zip = "1207";
-                        String country = "Bangladesh";
-*/
                         address = new Address(location, city, zip, country);
 
                         profileFile = new File(result);
@@ -192,30 +174,18 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                     }
                 });
-                }
-            } else {
-                requestPermission(); // Code for permission
             }
 
-    }
 
     ///////////Functionally////////////
 
-
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(BeforeHomeActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /////Start Storage Request Permission///////
     private void requestPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(BeforeHomeActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(BeforeHomeActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Toast.makeText(BeforeHomeActivity.this, "Write External Storage permission allows us to save files. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(BeforeHomeActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         } else {
-            ActivityCompat.requestPermissions(BeforeHomeActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(BeforeHomeActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -224,14 +194,15 @@ public class BeforeHomeActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.e("value", "Permission Granted, Now you can use local drive .");
-            } else {
-                Log.e("value", "Permission Denied, You cannot use local drive .");
-            }
-            break;
+                    Log.e("value", "Permission Granted, Now you can use local drive .");
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
         }
     }
 
+    /////End Storage Request Permission///////
 
     private void ChooseProfileImage() {
         proIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -243,7 +214,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
         startActivityForResult(nidIntent,2);
     }
 
-    public String getMimeType(Uri uri) {
+   /* public String getMimeType(Uri uri) {
         String extension;
 
         //Check uri format to avoid null
@@ -259,7 +230,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
         }
 
         return extension;
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -297,7 +268,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
         }
     }
 
- private String getRealPathFromURI(Uri contentUri) {
+    private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();

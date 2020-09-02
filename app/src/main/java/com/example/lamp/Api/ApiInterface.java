@@ -5,6 +5,7 @@ import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
 import com.example.lamp.Registration.UserRegistration;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import okhttp3.RequestBody;
 import retrofit2.http.GET;
@@ -50,8 +51,6 @@ public interface ApiInterface {
             @Query("email") String email,
             @Part("photo\"; filename=\"myProfile.jpg\" " ) RequestBody photoFile,
             @Part("nid\"; filename=\"myNid.jpg\" ") RequestBody nidFile,
-            /*@Part("photo") RequestBody photoFile,
-            @Part("nid") RequestBody nidFile,*/
             @Query("name") String name
     );
 
