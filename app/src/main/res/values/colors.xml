@@ -5,6 +5,7 @@
     <color name="colorAccent">#F7931E</color>
 
     <color name="black">#000</color>
+    <color name="black_lite">#B7000000</color>
     <color name="red">#D1392D</color>
     <color name="app_background">#e0e0e0</color>
     <color name="white">#FFFFFF</color>
