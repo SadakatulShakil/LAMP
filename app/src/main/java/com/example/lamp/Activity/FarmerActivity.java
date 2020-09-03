@@ -39,8 +39,8 @@ public class FarmerActivity extends AppCompatActivity {
     private Spinner mSpinner;
     private Button btnUpload;
     private TextView userName, logOut;
-    private String clickedProductTypeName, retrievedToken;
-    private UpdateUserInfo updateUserInfo;
+    private String clickedProductTypeName, retrievedToken,usedName;
+    //private UpdateUserInfo updateUserInfo;
     public static final String TAG = "Farmer";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,33 @@ public class FarmerActivity extends AppCompatActivity {
 
         initList();
         initView();
-        final Intent intent = getIntent();
-        updateUserInfo = (UpdateUserInfo) intent.getSerializableExtra("userData");
+
         SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken  = preferences.getString("TOKEN",null);
-        String name = updateUserInfo.getName();
-        userName.setText("Hello ! "+name);
 
-        String token = updateUserInfo.getToken();
+        if(retrievedToken!= null){
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+
+            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer "+retrievedToken);
+            call.enqueue(new Callback<UpdateUserInfo>() {
+                @Override
+                public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
+                    if(response.code() == 200){
+                       UpdateUserInfo updateUserInfo = response.body();
+
+                        userName.setText("Hello ! "+updateUserInfo.getName());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
+                    Toast.makeText(FarmerActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onFailure: "+"message: "+ t.getMessage());
+                }
+            });
+        }
+
         dToolbar.setTitle(getString(R.string.farmer));
 
         btnUpload.setOnClickListener(new View.OnClickListener() {

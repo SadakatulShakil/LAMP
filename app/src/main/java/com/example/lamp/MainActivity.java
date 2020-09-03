@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.lamp.Activity.BeforeHomeActivity;
+import com.example.lamp.Activity.FarmerActivity;
 import com.example.lamp.Activity.SignUpActivity;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
@@ -33,11 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private String device_name = "mobile";
     public static final String TAG ="signIn";
     private ProgressBar progressBar;
+    private  SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+
         dToolbar.setTitle(getString(R.string.login));
         dToolbar.setNavigationIcon(R.drawable.ic_arrow);
         signUpBt.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 String email = emailET.getText().toString().trim();
-                String password = passwordET.getText().toString().trim();
+                final String password = passwordET.getText().toString().trim();
 
                 Retrofit retrofit = RetrofitClient.getRetrofitClient();
                 ApiInterface api = retrofit.create(ApiInterface.class);
@@ -78,11 +81,22 @@ public class MainActivity extends AppCompatActivity {
                             preferences.edit().putString("type", userLogin.getUser().getType()).apply();
 
                             Log.d(TAG, "onResponse: "+userLogin.getToken());
-                            Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
-                          Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
-                          intent.putExtra("loginResponse", userLogin);
-                          startActivity(intent);
-                          finish();
+                            preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                            boolean isFirstLog = preferences.getBoolean("isFirstLog", false);
+                            if(isFirstLog && userLogin.getUser().getType().equals("farmer")){
+                                Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity.this, FarmerActivity.class);
+                                //intent.putExtra("loginResponse", userLogin);
+                                startActivity(intent);
+                                finish();
+                            }else{
+
+                                Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
+                                //intent.putExtra("loginResponse", userLogin);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
                     }
 
@@ -95,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
     private void initViews() {
         signUpBt = findViewById(R.id.signUpBTN);
 

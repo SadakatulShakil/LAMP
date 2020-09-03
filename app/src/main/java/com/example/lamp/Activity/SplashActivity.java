@@ -48,7 +48,6 @@ public class SplashActivity extends AppCompatActivity {
         //Assign animation
         AssignAnim();
         //splash coding
-
         RunSplash();
 
     }
@@ -69,7 +68,10 @@ public class SplashActivity extends AppCompatActivity {
 
                 if(retrievedToken != null
                         && retrieveType.equals("farmer")){
-                    Retrofit retrofit = RetrofitClient.getRetrofitClient();
+                    Intent intent = new Intent(SplashActivity.this, FarmerActivity.class);
+                    startActivity(intent);
+                    finish();
+                  /*  Retrofit retrofit = RetrofitClient.getRetrofitClient();
                     ApiInterface api = retrofit.create(ApiInterface.class);
 
                     Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer "+retrievedToken);
@@ -79,10 +81,7 @@ public class SplashActivity extends AppCompatActivity {
                             Log.d(TAG, "onResponse: "+"response code: " +response.code());
                             if(response.code() == 200){
                                 updateUserInfo = response.body();
-                                Intent intent = new Intent(SplashActivity.this, FarmerActivity.class);
-                                intent.putExtra("userData", updateUserInfo);
-                                startActivity(intent);
-                                finish();
+
                             }
                         }
 
@@ -93,17 +92,15 @@ public class SplashActivity extends AppCompatActivity {
 
                         }
                     });
-
+*/
                 }else if(retrievedToken != null
                         && retrieveType.equals("WholeSeller")){
                     Intent intent = new Intent(SplashActivity.this, WholeSellerActivity.class);
-                    intent.putExtra("userData", updateUserInfo);
                     startActivity(intent);
                     finish();
                 }else if(retrievedToken != null
                         && retrieveType.equals("Agent")){
                     Intent intent = new Intent(SplashActivity.this, AgentActivity.class);
-                    intent.putExtra("userData", updateUserInfo);
                     startActivity(intent);
                     finish();
                 }else if(retrievedToken == null){

@@ -3,7 +3,9 @@ package com.example.lamp.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -55,18 +57,19 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
     private Button btVerifyNext, btFillProfileNext;
     private ConstraintLayout profileLayout,verifyLayout;
-    private String userType,nickProPath, nickNidPath,result="";
+    private String userType,nickProPath, nickNidPath,result="",retrievedToken,firstTime;
     private RadioGroup updateUserType;
+    private RadioButton rb1, rb2, rb3;
     private static final String TAG = "BeforeHomeActivity";
     private EditText nameET, emailET, phoneET, cityET, zipET, locationET, countryET;
     private ImageView proImageView, nidImageView;
     private Uri profileImageUri, nidImageUri;
     Address address;
     UpdateUserInfo updateUserInfo;
-    UserLogin userLoginResponse;
     Intent nidIntent, proIntent;
     private File profileFile, nidFile;
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +79,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
         init();
 
         requestPermission();
-
-        Intent intent = getIntent();
-        userLoginResponse = (UserLogin) intent.getSerializableExtra("loginResponse");
-        Log.d(TAG, "onCreate: " + userLoginResponse.getToken());
 
         updateUserType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -92,6 +91,48 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
             }
         });
+
+        //get Some info of User//
+
+        preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        retrievedToken  = preferences.getString("TOKEN",null);
+
+
+        if(retrievedToken != null){
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+
+            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer "+retrievedToken);
+
+            call.enqueue(new Callback<UpdateUserInfo>() {
+                @Override
+                public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
+                    if(response.code() == 200){
+                        updateUserInfo = response.body();
+                        nameET.setText(updateUserInfo.getName());
+                        emailET.setText(updateUserInfo.getEmail());
+                        phoneET.setText(updateUserInfo.getPhone());
+
+                        if(updateUserInfo.getType().equals("farmer")){
+                            rb1.setChecked(true);
+                        }else if(updateUserInfo.getType().equals("wholeseller")){
+                            rb2.setChecked(true);
+                        }else if(updateUserInfo.getType().equals("agent")){
+                            rb3.setChecked(true);
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
+                    Toast.makeText(BeforeHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onFailure: "+"message: "+ t.getMessage());
+                }
+            });
+        }
+
 
         proImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,14 +170,11 @@ public class BeforeHomeActivity extends AppCompatActivity {
                         nidFile = new File(result);
                         RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/octet-stream"), nidFile);
 
-
-                        String token = userLoginResponse.getToken();
-
                         Retrofit retrofit = RetrofitClient.getRetrofitClient();
 
                         ApiInterface api = retrofit.create(ApiInterface.class);
 
-                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+token, type, location, city, zip, country, phone, email, requestBody, requestBody1, name);
+                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+retrievedToken, type, location, city, zip, country, phone, email, requestBody, requestBody1, name);
 
                         call.enqueue(new Callback<UpdateUserInfo>() {
                             @Override
@@ -149,7 +187,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                     Toast.makeText(BeforeHomeActivity.this, "User Name: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
                                     if(updateUserInfo.getType().equals("farmer")){
                                         Intent intent = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
-                                        intent.putExtra("userData",updateUserInfo);
                                         startActivity(intent);
                                         finish();
                                     }else if(updateUserInfo.getType().equals("wholeseller")){
@@ -161,6 +198,8 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     }
+                                    preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                                    preferences.edit().putBoolean("isFirstLog", true).apply();
                                 }
                             }
 
@@ -175,6 +214,35 @@ public class BeforeHomeActivity extends AppCompatActivity {
                     }
                 });
             }
+
+    private void firstLoginCheck(UpdateUserInfo updateUserInfo) {
+            SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+            firstTime = preferences.getString("firstTime", "");
+
+            if(firstTime.equals("Yes")){
+                if(updateUserInfo.getType().equals("farmer")){
+
+                    Intent intent1 = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }else if(updateUserInfo.getType().equals("wholeseller")){
+
+                    Intent intent1 = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }else if(updateUserInfo.getType().equals("Agent")){
+
+                    Intent intent1 = new Intent(BeforeHomeActivity.this, AgentActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }
+            }else{
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("firstTime","Yes");
+                editor.apply();
+            }
+
+    }
 
 
     ///////////Functionally////////////
@@ -285,6 +353,9 @@ public class BeforeHomeActivity extends AppCompatActivity {
         btFillProfileNext = findViewById(R.id.nextBtn);
         profileLayout = findViewById(R.id.fillProfileLayout);
         verifyLayout = findViewById(R.id.verifypLayout);
+        rb1 = findViewById(R.id.radioButton1);
+        rb2 = findViewById(R.id.radioButton2);
+        rb3 = findViewById(R.id.radioButton3);
 
         updateUserType = findViewById(R.id.typeOfUser);
 
