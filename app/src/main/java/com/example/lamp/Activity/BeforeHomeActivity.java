@@ -163,11 +163,11 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                         address = new Address(location, city, zip, country);
 
-                        profileFile = new File(result);
+                        profileFile = new File(getRealPathFromURI(profileImageUri));
                         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), profileFile);
                         Log.d(TAG, "onClick: "+requestBody.toString());
 
-                        nidFile = new File(result);
+                        nidFile = new File(getRealPathFromURI(nidImageUri));
                         RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/octet-stream"), nidFile);
 
                         Retrofit retrofit = RetrofitClient.getRetrofitClient();
@@ -215,7 +215,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                 });
             }
 
-    private void firstLoginCheck(UpdateUserInfo updateUserInfo) {
+   /* private void firstLoginCheck(UpdateUserInfo updateUserInfo) {
             SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
             firstTime = preferences.getString("firstTime", "");
 
@@ -242,7 +242,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                 editor.apply();
             }
 
-    }
+    }*/
 
 
     ///////////Functionally////////////
@@ -282,24 +282,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
         startActivityForResult(nidIntent,2);
     }
 
-   /* public String getMimeType(Uri uri) {
-        String extension;
-
-        //Check uri format to avoid null
-        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-            //If scheme is a content
-            final MimeTypeMap mime = MimeTypeMap.getSingleton();
-            extension = mime.getExtensionFromMimeType(getContentResolver().getType(uri));
-        } else {
-            //If scheme is a File
-            //This will replace white spaces with %20 and also other special characters. This will avoid returning null values on file name with spaces and special characters.
-            extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(uri.getPath())).toString());
-
-        }
-
-        return extension;
-    }*/
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.d(TAG, "onActivityResult: "+"Activity result success");
@@ -309,12 +291,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
             case 1:
                 if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
                     profileImageUri = data.getData();
-                    getRealPathFromURI(profileImageUri);
-                   /* String path1 = profileImageUri.getPath()+"."+getMimeType(profileImageUri);
-                    String profilePath = Environment.getExternalStorageDirectory().toString() + path1;
-                    Log.d(TAG, "onActivityResult: " + "profile: "+ profilePath);
-                    profileFile = new File(profilePath);
-                    nickProPath = profileFile.getName();*/
+                    //getRealPathFromURI(profileImageUri);
                     Log.d(TAG, "onActivityResult: "+profileImageUri);
                     Picasso.get().load(profileImageUri).into(proImageView);
 
@@ -324,12 +301,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
             case 2:
                 if(resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
                     nidImageUri = data.getData();
-                    /*String path2 = nidImageUri.getPath()+"."+getMimeType(nidImageUri);
-                    String nidPath = Environment.getExternalStorageDirectory().toString() + path2;
-                    Log.d(TAG, "onActivityResult: " + "profile: "+ nidPath);
-                    nidFile = new File(nidPath);
-                    nickNidPath = nidFile.getName();
-                    Log.d(TAG, "onActivityResult: "+nickNidPath);*/
+                    //getRealPathFromURI(nidImageUri);
                     Picasso.get().load(nidImageUri).into(nidImageView);
                 }
                 break;

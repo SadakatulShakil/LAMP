@@ -3,6 +3,7 @@ package com.example.lamp.Api;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
+import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.Registration.UserRegistration;
 
 import okhttp3.ResponseBody;
@@ -63,6 +64,12 @@ public interface ApiInterface {
     @Headers("accept: application/json")
     @POST("api/mobile/logout")
     Call<String> postByLogOutQuery(
+            @Header("Authorization") String token
+    );
+
+    @Headers("accept: application/json")
+    @GET("api/mobile/products")
+    Call<ProductsInfo> getByProductsQuery(
             @Header("Authorization") String token
     );
 /*

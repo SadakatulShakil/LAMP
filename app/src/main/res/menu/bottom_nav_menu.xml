@@ -3,22 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/homeFm"
+        android:id="@+id/homeNv"
         android:icon="@drawable/home"
         android:title="Home" />
 
     <item
-        android:id="@+id/nearPlaceFm"
+        android:id="@+id/uploadNv"
         android:icon="@drawable/uploads"
         android:title="Nearby Place" />
 
     <item
-        android:id="@+id/historyFm"
+        android:id="@+id/ordersNv"
         android:icon="@drawable/orders"
         android:title="History" />
 
     <item
-        android:id="@+id/profileFm"
+        android:id="@+id/profileNv"
         android:icon="@drawable/profile"
         android:title="Profile" />
 </menu>

@@ -68,31 +68,10 @@ public class SplashActivity extends AppCompatActivity {
 
                 if(retrievedToken != null
                         && retrieveType.equals("farmer")){
-                    Intent intent = new Intent(SplashActivity.this, FarmerActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, UserInterfaceContainerActivity.class);
                     startActivity(intent);
                     finish();
-                  /*  Retrofit retrofit = RetrofitClient.getRetrofitClient();
-                    ApiInterface api = retrofit.create(ApiInterface.class);
 
-                    Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer "+retrievedToken);
-                    call.enqueue(new Callback<UpdateUserInfo>() {
-                        @Override
-                        public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
-                            Log.d(TAG, "onResponse: "+"response code: " +response.code());
-                            if(response.code() == 200){
-                                updateUserInfo = response.body();
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
-                            Toast.makeText(SplashActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "onFailure: " +t.getMessage());
-
-                        }
-                    });
-*/
                 }else if(retrievedToken != null
                         && retrieveType.equals("WholeSeller")){
                     Intent intent = new Intent(SplashActivity.this, WholeSellerActivity.class);

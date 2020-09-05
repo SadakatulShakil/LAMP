@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.lamp.Activity.BeforeHomeActivity;
 import com.example.lamp.Activity.FarmerActivity;
 import com.example.lamp.Activity.SignUpActivity;
+import com.example.lamp.Activity.UserInterfaceContainerActivity;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.Login.UserLogin;
@@ -81,11 +82,10 @@ public class MainActivity extends AppCompatActivity {
                             preferences.edit().putString("type", userLogin.getUser().getType()).apply();
 
                             Log.d(TAG, "onResponse: "+userLogin.getToken());
-                            preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                             boolean isFirstLog = preferences.getBoolean("isFirstLog", false);
                             if(isFirstLog && userLogin.getUser().getType().equals("farmer")){
                                 Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(MainActivity.this, FarmerActivity.class);
+                                Intent intent = new Intent(MainActivity.this, UserInterfaceContainerActivity.class);
                                 //intent.putExtra("loginResponse", userLogin);
                                 startActivity(intent);
                                 finish();
