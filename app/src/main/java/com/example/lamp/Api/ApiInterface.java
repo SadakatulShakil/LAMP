@@ -72,6 +72,13 @@ public interface ApiInterface {
     Call<ProductsInfo> getByProductsQuery(
             @Header("Authorization") String token
     );
+
+    @Headers("accept: application/json")
+    @POST("/api/mobile/comments/{comment_id}/destroy")
+    Call<String> postByProductDeleteQuery(
+            @Header("Authorization") String token
+    );
+
 /*
     @GET()
     Call<List<UserPost>> getByPostUrl(

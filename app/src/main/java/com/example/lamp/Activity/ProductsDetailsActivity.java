@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 public class ProductsDetailsActivity extends AppCompatActivity {
 
     private ImageView previewImage, thumbnail1, thumbnail2, thumbnail3;
-    private TextView update, delete, title, description, stock, startDate, endDate;
+    private TextView update, delete, title, description, price, stock, startDate, endDate;
     private Toolbar dToolbar;
     private Datum productData;
 
@@ -38,6 +38,17 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         productData = (Datum) intent.getSerializableExtra("productData");
 
         loadProductData();
+        ClickEvents();
+
+    }
+
+    private void ClickEvents() {
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -48,12 +59,15 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         String pStock = String.valueOf(productData.getStock());
         String pStartDate = productData.getStartedAt();
         String pEndDate = productData.getExpiredAt();
+        String pPrice = String.valueOf(productData.getUnitPrice());
+        String unit = productData.getUnit();
 
-        title.setText(pTitle);
+        title.setText("Title: "+pTitle);
         description.setText(pDescription);
-        stock.setText(pStock);
-        startDate.setText(pStartDate);
-        endDate.setText(pEndDate);
+        stock.setText("Stock Available: "+pStock);
+        startDate.setText("Start At: "+pStartDate);
+        endDate.setText("Expire At: "+pEndDate);
+        price.setText(pPrice+"৳/"+unit);
 
         Picasso.get().load(productData.getPhotos().getOne()).into(previewImage);
         Picasso.get().load(productData.getPhotos().getOne()).into(thumbnail1);
@@ -100,5 +114,6 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         stock = findViewById(R.id.stockTv);
         startDate = findViewById(R.id.startDateTv);
         endDate = findViewById(R.id.endDateTv);
+        price = findViewById(R.id.priceTv);
     }
 }
