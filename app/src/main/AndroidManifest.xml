@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.UserInterfaceContainerActivity"></activity>
+        <activity android:name=".Activity.ProductsDetailsActivity"></activity>
+        <activity android:name=".Activity.UserInterfaceContainerActivity" />
         <activity android:name=".Activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

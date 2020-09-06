@@ -10,12 +10,12 @@
     <item
         android:id="@+id/uploadNv"
         android:icon="@drawable/uploads"
-        android:title="Nearby Place" />
+        android:title="Upload" />
 
     <item
         android:id="@+id/ordersNv"
         android:icon="@drawable/orders"
-        android:title="History" />
+        android:title="Orders" />
 
     <item
         android:id="@+id/profileNv"

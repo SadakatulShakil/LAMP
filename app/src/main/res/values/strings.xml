@@ -2,6 +2,8 @@
     <string name="app_name">LAMP</string>
 
     <string name="login">SignIn</string>
+    <string name="home">Home</string>
+    <string name="details">Details</string>
     <string name="signUp">SignUp</string>
     <string name="farmer">Farmer</string>
     <string name="wholeSeller">WholeSeller</string>
@@ -9,7 +11,7 @@
     <string name="spinner_hint">Select Product Type</string>
     <string name="live_fixed">Live Fixed</string>
     <string name="live_auction">Live Auction</string>
-    <string name="prebook_future">Prebook Future</string>
+    <string name="prebook_fixed">Prebook Future</string>
 
     <string name="verifysms">Waiting to automatically detect an SMS sent to</string>
     <!-- TODO: Remove or change this placeholder text -->

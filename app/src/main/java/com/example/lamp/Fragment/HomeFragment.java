@@ -2,15 +2,21 @@ package com.example.lamp.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,13 +41,21 @@ import retrofit2.Retrofit;
 public class HomeFragment extends Fragment {
 
     private Context context;
+    private Toolbar dToolbar;
     private RecyclerView live_fixed_Rv, live_auction_Rv, preBooked_Rv;
     private productsAdapter productsAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private ScrollView scViewOfProduct;
+    private RelativeLayout progressBarLayout;
+    private ProgressBar progressBar;
     private String retrievedToken;
     SharedPreferences preferences;
-    private ArrayList<Datum> datumArrayList;
-    public static final String TAG ="Home";
+    private ArrayList<Datum> datumArrayList = new ArrayList<>();
+    private ArrayList<Datum> live_fixedArrayList = new ArrayList<>();
+    private ArrayList<Datum> live_auctionArrayList = new ArrayList<>();
+    private ArrayList<Datum> prebook_fixedArrayList = new ArrayList<>();
+
+    public static final String TAG = "Home";
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -51,6 +65,7 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,32 +76,34 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.d(TAG, "onViewCreated: " + "On create ready");
         inItView(view);
-        datumArrayList = new ArrayList<>();
-        productsAdapter = new productsAdapter(context, datumArrayList);
-        live_fixed_Rv.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,true));
-        live_fixed_Rv.setAdapter(productsAdapter);
+        dToolbar.setTitle(getString(R.string.home));
+
+        progressBarLayout.setVisibility(View.VISIBLE);
+        scViewOfProduct.setVisibility(View.GONE);
 
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        retrievedToken  = preferences.getString("TOKEN",null);
+        retrievedToken = preferences.getString("TOKEN", null);
 
         getAuthUserData();
         getProductsData();
+
     }
+
 
     /////Functionality///////
     private void getAuthUserData() {
 
-        if(retrievedToken!= null){
+        if (retrievedToken != null) {
             Retrofit retrofit = RetrofitClient.getRetrofitClient();
             ApiInterface api = retrofit.create(ApiInterface.class);
 
-            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer "+retrievedToken);
+            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer " + retrievedToken);
             call.enqueue(new Callback<UpdateUserInfo>() {
                 @Override
                 public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
 
 
@@ -96,7 +113,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
                     Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onFailure: "+"message: "+ t.getMessage());
+                    Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
                 }
             });
         }
@@ -106,19 +123,55 @@ public class HomeFragment extends Fragment {
         Retrofit retrofit = RetrofitClient.getRetrofitClient();
         ApiInterface api = retrofit.create(ApiInterface.class);
 
-        Call<ProductsInfo>call = api.getByProductsQuery("Bearer "+retrievedToken);
+        Call<ProductsInfo> call = api.getByProductsQuery("Bearer " + retrievedToken);
 
         call.enqueue(new Callback<ProductsInfo>() {
             @Override
             public void onResponse(Call<ProductsInfo> call, Response<ProductsInfo> response) {
-                if(response.code() == 200){
+                if (response.code() == 200) {
+                    progressBarLayout.setVisibility(View.GONE);
+                    scViewOfProduct.setVisibility(View.VISIBLE);
                     ProductsInfo productsData = response.body();
+
+                    datumArrayList.clear();
+                    live_fixedArrayList.clear();
+                    prebook_fixedArrayList.clear();
+                    live_auctionArrayList.clear();
+
                     datumArrayList.addAll(productsData.getData());
                     Log.d(TAG, "onResponse: " + productsData.getData().size());
 
-                    /*Log.d(TAG, "onResponse: "+ datumArrayList.get(0).getData().size());*/
+                    for (Datum datum : datumArrayList) {/////for each loop is " object of ArrayList : that ArrayList/////
+
+                        if (datum.getType().equals("live_fixed")) {
+                            live_fixedArrayList.add(datum);
+                            ////get live_fixed/////////
+                            productsAdapter = new productsAdapter(context, live_fixedArrayList);
+                            live_fixed_Rv.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, true));
+                            live_fixed_Rv.setAdapter(productsAdapter);
+                            productsAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "onResponse: Fixed" + live_fixedArrayList.size());
+                        } else if (datum.getType().equals("live_auction")) {
+                            live_auctionArrayList.add(datum);
+                            ////get prebook_fixed//////
+                            productsAdapter = new productsAdapter(context, prebook_fixedArrayList);
+                            preBooked_Rv.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, true));
+                            preBooked_Rv.setAdapter(productsAdapter);
+                            productsAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "onResponse: Auction" + live_auctionArrayList.size());
+                        } else if (datum.getType().equals("prebook_fixed")) {
+                            prebook_fixedArrayList.add(datum);
+                            ///////get live_auction////
+                            productsAdapter = new productsAdapter(context, live_auctionArrayList);
+                            live_auction_Rv.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, true));
+                            live_auction_Rv.setAdapter(productsAdapter);
+                            productsAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "onResponse: Prebook" + prebook_fixedArrayList.size());
+                        }
+                    }
+
                 }
-                    productsAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -130,9 +183,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void inItView(View view) {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dToolbar = view.findViewById(R.id.toolbar);
+        }
         live_fixed_Rv = view.findViewById(R.id.recyclerViewForLiveFixed);
         live_auction_Rv = view.findViewById(R.id.recyclerViewForAuction);
         preBooked_Rv = view.findViewById(R.id.recyclerViewForPreBooked);
+
+        scViewOfProduct = view.findViewById(R.id.productView);
+        progressBarLayout = view.findViewById(R.id.progressBarLayout);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 }

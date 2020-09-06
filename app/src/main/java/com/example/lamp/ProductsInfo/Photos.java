@@ -4,7 +4,9 @@ package com.example.lamp.ProductsInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photos {
+import java.io.Serializable;
+
+public class Photos implements Serializable {
 
     @SerializedName("one")
     @Expose

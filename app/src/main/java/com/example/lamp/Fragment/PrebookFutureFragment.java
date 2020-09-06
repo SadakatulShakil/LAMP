@@ -33,7 +33,7 @@ public class PrebookFutureFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView(view);
-        dToolbar.setTitle(getString(R.string.prebook_future));
+        dToolbar.setTitle(getString(R.string.home));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             dToolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
              

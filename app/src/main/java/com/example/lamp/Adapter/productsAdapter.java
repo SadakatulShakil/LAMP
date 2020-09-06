@@ -1,6 +1,7 @@
 package com.example.lamp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.Activity.ProductsDetailsActivity;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.R;
@@ -42,10 +45,19 @@ public class productsAdapter extends RecyclerView.Adapter<productsAdapter.viewHo
         String unitPrice = String.valueOf(productsInfo.getUnitPrice());
         String unitMeasure = productsInfo.getUnit();
         holder.productUnitPrice.setText(unitPrice+"৳/"+unitMeasure);
-        String minBidPrice = String.valueOf(productsInfo.getMinBidPrice());
-        holder.productBidPrice.setText(minBidPrice);
+        String stockAmount = String.valueOf(productsInfo.getStock());
+        holder.productStock.setText("Stock: "+stockAmount+unitMeasure);
         String productImageUri = productsInfo.getPhotos().getOne();
         Picasso.get().load(productImageUri).into(holder.productImage);
+
+        holder.productView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProductsDetailsActivity.class);
+                intent.putExtra("productData", productsInfo);
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -56,14 +68,16 @@ public class productsAdapter extends RecyclerView.Adapter<productsAdapter.viewHo
 
     public class viewHolder extends RecyclerView.ViewHolder {
         private ImageView productImage;
-        private TextView productTitle, productUnitPrice, productBidPrice;
+        private CardView productView;
+        private TextView productTitle, productUnitPrice, productStock;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
 
             productImage = itemView.findViewById(R.id.productImage);
             productTitle = itemView.findViewById(R.id.productTitle);
             productUnitPrice = itemView.findViewById(R.id.productUnitPrice);
-            productBidPrice = itemView.findViewById(R.id.productBidPrice);
+            productStock = itemView.findViewById(R.id.productStock);
+            productView = itemView.findViewById(R.id.productsLayout);
         }
     }
 }

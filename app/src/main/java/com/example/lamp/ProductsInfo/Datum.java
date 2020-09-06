@@ -4,7 +4,9 @@ package com.example.lamp.ProductsInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+import java.io.Serializable;
+
+public class Datum implements Serializable {
 
     @SerializedName("_id")
     @Expose
@@ -194,4 +196,26 @@ public class Datum {
         this.updatedAt = updatedAt;
     }
 
+    @Override
+    public String toString() {
+        return "Datum{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", agentId='" + agentId + '\'' +
+                ", title='" + title + '\'' +
+                ", slug='" + slug + '\'' +
+                ", description='" + description + '\'' +
+                ", photos=" + photos +
+                ", type='" + type + '\'' +
+                ", unit='" + unit + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", minBidPrice=" + minBidPrice +
+                ", category='" + category + '\'' +
+                ", stock=" + stock +
+                ", startedAt='" + startedAt + '\'' +
+                ", expiredAt='" + expiredAt + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
+    }
 }

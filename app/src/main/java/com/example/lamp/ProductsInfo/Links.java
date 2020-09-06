@@ -4,7 +4,9 @@ package com.example.lamp.ProductsInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Links {
+import java.io.Serializable;
+
+public class Links implements Serializable {
 
     @SerializedName("current_page")
     @Expose

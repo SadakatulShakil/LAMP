@@ -6,7 +6,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/createEventsLayout"
+        android:id="@+id/productsLayout"
         android:layout_width="130dp"
         android:layout_height="150dp"
         android:layout_margin="5dp"
@@ -47,17 +47,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="100tk/কেজী"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/productBidPrice"
+                android:id="@+id/productStock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Bid Start : 5000tk"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
