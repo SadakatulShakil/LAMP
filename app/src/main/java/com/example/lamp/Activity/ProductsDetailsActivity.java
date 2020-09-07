@@ -5,26 +5,43 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.lamp.Api.ApiInterface;
+import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.Fragment.HomeFragment;
 import com.example.lamp.Fragment.ProductsDetailsFragment;
+import com.example.lamp.MainActivity;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ProductsDetailsActivity extends AppCompatActivity {
 
     private ImageView previewImage, thumbnail1, thumbnail2, thumbnail3;
-    private TextView update, delete, title, description, price, stock, startDate, endDate;
+    private TextView delete, title, description, price, stock, startDate, endDate;
     private Toolbar dToolbar;
     private Datum productData;
+    private SharedPreferences preferences;
+    private String retrievedToken;
+    public static final String TAG = "Details";
+    private FloatingActionButton update;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +49,12 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products_details);
 
         inItView();
-        dToolbar.setTitle(getString(R.string.details));
+        /*dToolbar.setTitle(getString(R.string.details));*/
 
         Intent intent = getIntent();
         productData = (Datum) intent.getSerializableExtra("productData");
+        preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        retrievedToken = preferences.getString("TOKEN", null);
 
         loadProductData();
         ClickEvents();
@@ -46,6 +65,32 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (retrievedToken != null) {
+                    Retrofit retrofit = RetrofitClient.getRetrofitClient();
+                    ApiInterface api = retrofit.create(ApiInterface.class);
+
+                    Call<String> call = api.postByProductDeleteQuery("Bearer "+ retrievedToken, productData.getId());
+
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.d(TAG, "onResponse: Response Code: "+response.code());
+                            if(response.code() == 200){
+                                Intent intent1 = new Intent(ProductsDetailsActivity.this, UserInterfaceContainerActivity.class);
+                                startActivity(intent1);
+                                finish();
+                                Toast.makeText(ProductsDetailsActivity.this, "response: "+ response.body(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.d(TAG, "onFailure: "+ t.getMessage());
+                            Toast.makeText(ProductsDetailsActivity.this, "Failure: "+ t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
 
             }
         });
@@ -64,10 +109,10 @@ public class ProductsDetailsActivity extends AppCompatActivity {
 
         title.setText("Title: "+pTitle);
         description.setText(pDescription);
-        stock.setText("Stock Available: "+pStock);
+        stock.setText("Stock Available: "+pStock+" "+unit);
         startDate.setText("Start At: "+pStartDate);
         endDate.setText("Expire At: "+pEndDate);
-        price.setText(pPrice+"৳/"+unit);
+        price.setText("Price: "+pPrice+"৳/"+unit);
 
         Picasso.get().load(productData.getPhotos().getOne()).into(previewImage);
         Picasso.get().load(productData.getPhotos().getOne()).into(thumbnail1);
@@ -107,7 +152,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         thumbnail2 = findViewById(R.id.thumbnail2);
         thumbnail3 = findViewById(R.id.thumbnail3);
 
-        update = findViewById(R.id.updateTv);
+        update = findViewById(R.id.updateFAB);
         delete = findViewById(R.id.deleteTv);
         title = findViewById(R.id.titleTv);
         description = findViewById(R.id.productDescriptionTv);

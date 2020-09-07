@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".Fragment.LiveFixedFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -19,125 +20,261 @@
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:text="Upload Image"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tvFixedProductName"
-        app:layout_constraintStart_toEndOf="@+id/fixedProductImageView"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/fixedProductImageView"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/upload"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-
-    <EditText
-        android:id="@+id/tvFixedProductName"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/background_et"
-        android:drawablePadding="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Product Name"
-        android:imeOptions="actionNext"
-        android:inputType="textCapWords"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fixedProductImageView" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/tvFixedProductDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/background_et"
-        android:drawablePadding="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Description"
-        android:imeOptions="actionNext"
-        android:inputType="textCapWords"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFixedProductName" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/tvFixedProductPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/background_et"
-        android:drawablePadding="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Product price"
-        android:imeOptions="actionNext"
-        android:inputType="number"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFixedProductDescription" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/tvFixedLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/background_et"
-        android:drawablePadding="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Location (e.g. Upazilla, District)"
-        android:imeOptions="actionDone"
-        android:inputType="textCapWords"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/tvFixedProductPrice" />
+                <EditText
+                    android:id="@+id/tvLiveProductTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Product Title"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/UploadFixedProductBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:background="@drawable/round_txt_design"
-        android:backgroundTint="@color/colorAccent"
-        android:elevation="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="Save"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFixedLocation" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                    android:id="@+id/tvLiveProductSlug"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Product Slug"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductTitle" />
+
+
+                <EditText
+                    android:id="@+id/tvLiveProductDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Description"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapWords"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductSlug" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="Upload product photo"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductDescription" />
+
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="16dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/ic_add_photo"
+                    app:layout_constraintEnd_toEndOf="@+id/textView10"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_photo"
+                    app:layout_constraintStart_toEndOf="@+id/image1"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_photo"
+                    app:layout_constraintStart_toEndOf="@+id/image2"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+
+                <EditText
+                    android:id="@+id/tvLiveProductStock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="stock available"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image1" />
+
+                <EditText
+                    android:id="@+id/tvLiveProductPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Unit price/taka"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductStock" />
+
+                <EditText
+                    android:id="@+id/tvLiveProductUnit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Unit measure by"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductPrice" />
+
+                <EditText
+                    android:id="@+id/tvLiveAgentId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Agent_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductUnit" />
+
+                <EditText
+                    android:id="@+id/tvLiveProductCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/background_et"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Category"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveAgentId" />
+
+
+                <EditText
+                    android:id="@+id/startDateET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/border_round"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:drawableRight="@drawable/ic_calender"
+                    android:hint="Enter Start date"
+                    android:imeOptions="actionNext"
+                    android:padding="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+
+                <EditText
+                    android:id="@+id/endDateET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/border_round"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_calender"
+                    android:focusable="false"
+                    android:hint="Enter End date"
+                    android:imeOptions="actionNext"
+                    android:padding="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/startDateET" />
+
+                <Button
+                    android:id="@+id/uploadLiveProductBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/round_txt_design"
+                    android:backgroundTint="@color/colorAccent"
+                    android:elevation="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="Save"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/endDateET" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

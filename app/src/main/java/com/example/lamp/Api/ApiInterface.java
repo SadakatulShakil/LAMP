@@ -3,6 +3,7 @@ package com.example.lamp.Api;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
+import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.Registration.UserRegistration;
 
@@ -15,6 +16,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
@@ -74,9 +76,31 @@ public interface ApiInterface {
     );
 
     @Headers("accept: application/json")
-    @POST("/api/mobile/comments/{comment_id}/destroy")
+    @POST("/api/mobile/products/{product_id}/destroy")
     Call<String> postByProductDeleteQuery(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Path("product_id") String productId
+    );
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @Multipart
+    @POST("/api/mobile/login")
+    Call<Datum> postByProductStoreQuery(
+            @Header("Authorization") String token,
+            @Query("title") String title,
+            @Query("slug") String slug,
+            @Query("description") String description,
+            @Part("photo\"; filename=\"one.jpg\" " ) RequestBody firstImage,
+            @Part("photo\"; filename=\"two.jpg\" " ) RequestBody secondImage,
+            @Part("photo\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
+            @Query("type") String type,
+            @Query("unit_price") String unit_price,
+            @Query("unit") String unit,
+            @Query("stock") String stock,
+            @Query("agent_id") String agent_id,
+            @Query("category") String category,
+            @Query("started_at") String started_at,
+            @Query("expired_at") String expired_at
     );
 
 /*
