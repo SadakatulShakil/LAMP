@@ -65,8 +65,12 @@ public class SplashActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onCreate: "+"token: "+retrievedToken + "\ntype: "+retrieveType);
 
-
-                if(retrievedToken != null
+                    if(retrievedToken == null){
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(retrievedToken != null
                         && retrieveType.equals("farmer")){
                     Intent intent = new Intent(SplashActivity.this, UserInterfaceContainerActivity.class);
                     startActivity(intent);
@@ -80,10 +84,6 @@ public class SplashActivity extends AppCompatActivity {
                 }else if(retrievedToken != null
                         && retrieveType.equals("Agent")){
                     Intent intent = new Intent(SplashActivity.this, AgentActivity.class);
-                    startActivity(intent);
-                    finish();
-                }else if(retrievedToken == null){
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
