@@ -20,6 +20,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -70,6 +71,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
     private File profileFile, nidFile;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private SharedPreferences preferences;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
                 btFillProfileNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        progressBar.setVisibility(View.VISIBLE);
                         String name = nameET.getText().toString().trim();
                         String email = emailET.getText().toString().trim();
                         String phone = phoneET.getText().toString().trim();
@@ -182,11 +184,11 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                 Log.d(TAG, "onResponse: "+response.code());
 
                                 if(response.code() == 200){
-
+                                    progressBar.setVisibility(View.GONE);
                                     UpdateUserInfo updateUserInfo = response.body();
                                     Toast.makeText(BeforeHomeActivity.this, "User Name: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
                                     if(updateUserInfo.getType().equals("farmer")){
-                                        Intent intent = new Intent(BeforeHomeActivity.this, FarmerActivity.class);
+                                        Intent intent = new Intent(BeforeHomeActivity.this, UserInterfaceContainerActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }else if(updateUserInfo.getType().equals("wholeseller")){
@@ -341,5 +343,6 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
         proImageView = findViewById(R.id.profileImage);
         nidImageView = findViewById(R.id.nidImage);
+        progressBar = findViewById(R.id.progressBar);
     }
 }

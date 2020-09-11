@@ -206,50 +206,94 @@
                     android:gravity="center"
                     android:hint="Category"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
+                    android:inputType="textCapWords"
                     android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvLiveAgentId" />
 
-
-                <EditText
-                    android:id="@+id/startDateET"
+                <LinearLayout
+                    android:id="@+id/startTimeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/border_round"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:drawableRight="@drawable/ic_calender"
-                    android:hint="Enter Start date"
-                    android:imeOptions="actionNext"
-                    android:padding="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory">
 
-                <EditText
-                    android:id="@+id/endDateET"
+                    <EditText
+                        android:id="@+id/startDateET"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/border_round"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/ic_calender"
+                        android:focusable="false"
+                        android:hint="Start date"
+                        android:imeOptions="actionNext"
+                        android:padding="15dp" />
+
+                    <EditText
+                        android:id="@+id/startTimeET"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/border_round"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/ic_calender"
+                        android:focusable="false"
+                        android:hint="Start time"
+                        android:imeOptions="actionNext"
+                        android:padding="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/startDateET"
+                        app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/endTimeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/border_round"
-                    android:clickable="true"
-                    android:drawableRight="@drawable/ic_calender"
-                    android:focusable="false"
-                    android:hint="Enter End date"
-                    android:imeOptions="actionNext"
-                    android:padding="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/startDateET" />
+                    app:layout_constraintTop_toBottomOf="@+id/startTimeLayout">
+
+                    <EditText
+                        android:id="@+id/endDateET"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/border_round"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/ic_calender"
+                        android:focusable="false"
+                        android:hint="Start date"
+                        android:imeOptions="actionNext"
+                        android:padding="15dp" />
+
+                    <EditText
+                        android:id="@+id/endTimeET"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/border_round"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/ic_calender"
+                        android:focusable="false"
+                        android:hint="Start time"
+                        android:imeOptions="actionNext"
+                        android:padding="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/startDateET"
+                        app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/uploadLiveProductBtn"
@@ -269,12 +313,28 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/endDateET" />
+                    app:layout_constraintTop_toBottomOf="@+id/endTimeLayout" />
+
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:elevation="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
     </ScrollView>
+
 
 </LinearLayout>

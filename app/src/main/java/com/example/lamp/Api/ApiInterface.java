@@ -6,6 +6,7 @@ import com.example.lamp.Login.UserLogin;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.Registration.UserRegistration;
+import com.example.lamp.UploadInfo.UploadInfo;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -85,22 +86,22 @@ public interface ApiInterface {
     @Headers("accept: application/json, content-type: multipart/form-data")
     @Multipart
     @POST("/api/mobile/login")
-    Call<Datum> postByProductStoreQuery(
+    Call<UploadInfo> postByProductStoreQuery(
             @Header("Authorization") String token,
             @Query("title") String title,
             @Query("slug") String slug,
             @Query("description") String description,
             @Part("photo\"; filename=\"one.jpg\" " ) RequestBody firstImage,
-            @Part("photo\"; filename=\"two.jpg\" " ) RequestBody secondImage,
-            @Part("photo\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
+            @Part("photo1\"; filename=\"two.jpg\" " ) RequestBody secondImage,
+            @Part("photo2\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
             @Query("type") String type,
+            @Query("expired_at") String expired_at,
+            @Query("started_at") String started_at,
+            @Query("stock") String stock,
             @Query("unit_price") String unit_price,
             @Query("unit") String unit,
-            @Query("stock") String stock,
             @Query("agent_id") String agent_id,
-            @Query("category") String category,
-            @Query("started_at") String started_at,
-            @Query("expired_at") String expired_at
+            @Query("category") String category
     );
 
 /*

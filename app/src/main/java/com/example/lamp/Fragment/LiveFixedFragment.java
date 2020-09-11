@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +33,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.lamp.Activity.BeforeHomeActivity;
@@ -40,7 +43,9 @@ import com.example.lamp.Activity.UserInterfaceContainerActivity;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.ProductsInfo.Datum;
+import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.R;
+import com.example.lamp.UploadInfo.UploadInfo;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -59,16 +64,17 @@ import retrofit2.Retrofit;
 public class LiveFixedFragment extends Fragment {
     private Toolbar dToolbar;
     private Context context;
-    private String type = "live_fixed", retrievedToken;
-    private EditText title, slug, description, stock, unitPrice, unit, agentId, category, startedAt, expiredAt;
+    private String retrievedToken;
+    private EditText title, slug, description, stock, unitPrice, unit, agentId, category, startedDate, expiredDate, startTime, endTime;
     private Button uploadProductBtn;
     private ImageView oneImage, twoImage, threeImage;
-    protected static TextView viewDate1, viewDate2;
+    private int mYear, mMonth, mDay, mHour, mMinute;
     private SharedPreferences preferences;
     private Intent oneIntent, twoIntent, threeIntent;
     private File oneFile, twoFile, threeFile;
     public static final String TAG = "Live";
     private Uri oneImageUri, twoImageUri, threeImageUri;
+    private ProgressBar progressBar;
 
     public LiveFixedFragment() {
         // Required empty public constructor
@@ -99,7 +105,7 @@ public class LiveFixedFragment extends Fragment {
             dToolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
 
-        //final FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         /////////ImagePicker//////////
         oneImage.setOnClickListener(new View.OnClickListener() {
@@ -111,109 +117,169 @@ public class LiveFixedFragment extends Fragment {
         twoImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ChooseTwoImage();
+                ChooseTwoImage();
             }
         });
         threeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ChooseThreeImage();
+                ChooseThreeImage();
             }
         });
         /////////ImagePicker//////////
 
-        /*/////////datePicker//////////
-        startedAt.setOnClickListener(new View.OnClickListener() {
+        /////////datePicker//////////
+        startedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCompatDialogFragment newFragment = new DatePickerFragment1();
+                /*AppCompatDialogFragment newFragment = new DatePickerFragment1();
 
-                newFragment.show(fm, "datePicker");
+                newFragment.show(fm, "datePicker");*/
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                startedDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
             }
         });
-        expiredAt.setOnClickListener(new View.OnClickListener() {
+        expiredDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCompatDialogFragment newFragment = new DatePickerFragment2();
+             /*   AppCompatDialogFragment newFragment = new DatePickerFragment2();
 
-                newFragment.show(fm, "datePicker");
+                newFragment.show(fm, "datePicker");*/
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                expiredDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
             }
-        });
-        /////////datePicker//////////*/
+    });
 
-        /*uploadProductBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StoreProduct();
-            }
-        });*/
+        startTime.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick (View v){
+            final Calendar c = Calendar.getInstance();
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
 
+            // Launch Time Picker Dialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(context,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+
+                            startTime.setText(hourOfDay + ":" + minute);
+                        }
+                    }, mHour, mMinute, false);
+            timePickerDialog.show();
+        }
+    });
+
+        endTime.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick (View v){
+
+            final Calendar c = Calendar.getInstance();
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+
+            // Launch Time Picker Dialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(context,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+
+                            endTime.setText(hourOfDay + ":" + minute);
+                        }
+                    }, mHour, mMinute, false);
+            timePickerDialog.show();
+        }
+    });
+    /////////datePicker//////////
+
+        uploadProductBtn.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        progressBar.setVisibility(View.VISIBLE);
+        StoreProduct();
     }
+    });
 
+}
 
 
     private void ChooseOneImage() {
         oneIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(oneIntent,1);
+        startActivityForResult(oneIntent, 1);
     }
 
-   /* private void ChooseTwoImage() {
+    private void ChooseTwoImage() {
         twoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(twoIntent,2);
+        startActivityForResult(twoIntent, 2);
     }
 
     private void ChooseThreeImage() {
         threeIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(threeIntent,3);
-    }*/
+        startActivityForResult(threeIntent, 3);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "onActivityResult: "+"Activity result success");
+        Log.d(TAG, "onActivityResult: " + "Activity result success");
         super.onActivityResult(requestCode, resultCode, data);
 
-                if (requestCode == 1){
-                    if(resultCode == -1 && data != null && data.getData() != null) {
-                        oneImageUri = data.getData();
-                        Log.d(TAG, "onActivityResult: "+oneImageUri);
-                        String OneImageFilePath = getRealPathFromURI(oneImageUri);
-                        Log.d(TAG, "onActivityResult: "+ OneImageFilePath);
-                        File f1 = new File(OneImageFilePath);
-                        String FineName1 = f1.getName();
-                        Log.d(TAG, "onActivityResult: "+ FineName1);
-                        Picasso.get().load(oneImageUri).into(oneImage);
+        if (requestCode == 1) {
+            if (resultCode == -1 && data != null && data.getData() != null) {
+                oneImageUri = data.getData();
+                Log.d(TAG, "onActivityResult: " + oneImageUri);
+                Picasso.get().load(oneImageUri).into(oneImage);
 
-                    }
-        }
-      /*  if(requestCode == 2){
-            if(resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == -1 && data != null && data.getData() != null) {
                 twoImageUri = data.getData();
-                String TwoImageFilePath = getRealPathFromURI(twoImageUri);
-                Log.d(TAG, "onActivityResult: "+ TwoImageFilePath);
-                File f2 = new File(TwoImageFilePath);
-                String FineName2 = f2.getName();
-                Log.d(TAG, "onActivityResult: "+ FineName2);
+                Log.d(TAG, "onActivityResult: " + twoImageUri);
                 Picasso.get().load(twoImageUri).into(twoImage);
             }
-        }*/
-
-
-
-                /*if(requestCode == 3) {
-                    if(resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
-                        threeImageUri = data.getData();
-                        String ThreeImageFilePath = getRealPathFromURI(threeImageUri);
-                        Log.d(TAG, "onActivityResult: "+ ThreeImageFilePath);
-                        File f3 = new File(ThreeImageFilePath);
-                        String FineName3 = f3.getName();
-                        Log.d(TAG, "onActivityResult: "+ FineName3);
-                        Picasso.get().load(threeImageUri).into(threeImage);
-                    }
-                }
-                    */
+        } else if (requestCode == 3) {
+            if (resultCode == -1 && data != null && data.getData() != null) {
+                threeImageUri = data.getData();
+                Log.d(TAG, "onActivityResult: " + threeImageUri);
+                Picasso.get().load(threeImageUri).into(threeImage);
+            }
+        }
     }
 
-    private String getRealPathFromURI(Uri contentUri) {
+    private String getRealPathFromUri(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
@@ -224,27 +290,27 @@ public class LiveFixedFragment extends Fragment {
         return result;
     }
 
-  /*  private void StoreProduct() {
+    private void StoreProduct() {
+        String type = "live_fixed";
+        String pTitle = "তরমুজ";//title.getText().toString().trim();
+        String pDescription = "তরমুজ অনেক ভালো খাবার";//description.getText().toString().trim();
+        String pSlug = "water-melon";//slug.getText().toString().trim();
+        String pStock = "1000";//stock.getText().toString().trim();
+        String pUnitPrice = "50";//unitPrice.getText().toString().trim();
+        String pUnit = "কেজি";//unit.getText().toString().trim();
+        String pAgentId = "১১০০১১";//agentId.getText().toString().trim();
+        String pCategory = "ফল";//category.getText().toString().trim();
+        String pStartAt = "১১/09/2020";//startedDate.getText().toString().trim()+ ","+startTime.getText().toString().trim();
+        String pExpireAt = "১২/09/2020";//expiredDate.getText().toString().trim()+ ","+endTime.getText().toString().trim();
 
-        String pTitle = title.getText().toString().trim();
-        String pDescription = description.getText().toString().trim();
-        String pSlug = slug.getText().toString().trim();
-        String pStock = stock.getText().toString().trim();
-        String pUnitPrice = unitPrice.getText().toString().trim();
-        String pUnit = unit.getText().toString().trim();
-        String pAgentId = agentId.getText().toString().trim();
-        String pCategory = category.getText().toString().trim();
-        String pStartAt = viewDate1.getText().toString().trim();
-        String pExpireAt = viewDate2.getText().toString().trim();
-
-        oneFile = new File(getRealPathFromUri(oneImageUri, context));
+        oneFile = new File(getRealPathFromUri(oneImageUri));
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), oneFile);
-        Log.d(TAG, "onClick: "+requestBody.toString());
+        Log.d(TAG, "onClick: " + requestBody.toString());
 
-        twoFile = new File(getRealPathFromUri(twoImageUri, context));
+        twoFile = new File(getRealPathFromUri(twoImageUri));
         RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/octet-stream"), twoFile);
 
-        threeFile = new File(getRealPathFromUri(threeImageUri, context));
+        threeFile = new File(getRealPathFromUri(threeImageUri));
         RequestBody requestBody2 = RequestBody.create(MediaType.parse("application/octet-stream"), threeFile);
 
 
@@ -253,40 +319,33 @@ public class LiveFixedFragment extends Fragment {
             ApiInterface api = retrofit.create(ApiInterface.class);
 
 
-            Call<Datum> call = api.postByProductStoreQuery("Bearer " + retrievedToken,
-                    pTitle, pSlug, pDescription, requestBody, requestBody1, requestBody2,
-                    type, pUnitPrice, pUnit, pStock, pAgentId, pCategory, pStartAt, pExpireAt);
+            Call<UploadInfo> call = api.postByProductStoreQuery("Bearer " + retrievedToken,
+                    pTitle, pSlug, pDescription, requestBody, requestBody1, requestBody2, type,
+                    pExpireAt, pStartAt, pStock, pUnitPrice, pUnit, pAgentId, pCategory);
 
-            call.enqueue(new Callback<Datum>() {
+            call.enqueue(new Callback<UploadInfo>() {
                 @Override
-                public void onResponse(Call<Datum> call, Response<Datum> response) {
-                    Log.d(TAG, "onResponse: response code: " +response.code());
+                public void onResponse(Call<UploadInfo> call, Response<UploadInfo> response) {
+                    Log.d(TAG, "onResponse: response code: " + response.code());
 
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(context, "Successfully Added your Product", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(context, UserInterfaceContainerActivity.class);
                         context.startActivity(intent);
+                        getActivity().finish();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<Datum> call, Throwable t) {
+                public void onFailure(Call<UploadInfo> call, Throwable t) {
                     Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onFailure: "+"message: "+ t.getMessage());
+                    Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
                 }
             });
         }
 
-    }*/
-        /*String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        result = cursor.getString(column_index);
-        cursor.close();
-        return result;*/
-
+    }
 
     private void initView(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -300,89 +359,17 @@ public class LiveFixedFragment extends Fragment {
         unit = view.findViewById(R.id.tvLiveProductUnit);
         agentId = view.findViewById(R.id.tvLiveAgentId);
         category = view.findViewById(R.id.tvLiveProductCategory);
-        startedAt = view.findViewById(R.id.startDateET);
-        expiredAt = view.findViewById(R.id.endDateET);
+        startedDate = view.findViewById(R.id.startDateET);
+        expiredDate = view.findViewById(R.id.endDateET);
+        startTime = view.findViewById(R.id.startTimeET);
+        endTime = view.findViewById(R.id.endTimeET);
 
         oneImage = view.findViewById(R.id.image1);
         twoImage = view.findViewById(R.id.image2);
         threeImage = view.findViewById(R.id.image3);
+        progressBar = view.findViewById(R.id.progressBar);
 
         uploadProductBtn = view.findViewById(R.id.uploadLiveProductBtn);
     }
 
-    /*//DatePickerMethods
-    @SuppressLint("ValidFragment")
-    public static class DatePickerFragment1 extends AppCompatDialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog dpd = new DatePickerDialog(getActivity(),
-                    AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
-            return dpd;
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the chosen date
-            viewDate1 = getActivity().findViewById(R.id.startDateET);
-           *//* int actualMonth = month+1; // Because month index start from zero
-            // Display the unformatted date to TextView
-            tvDate.setText("Year : " + year + ", Month : " + actualMonth + ", Day : " + day + "\n\n");*//*
-
-            // Create a Date variable/object with user chosen date
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(0);
-            cal.set(year, month, day, 0, 0, 0);
-            Date chosenDate = cal.getTime();
-
-            // Format the date using style medium and UK locale
-            DateFormat df_medium_uk = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-            String df_medium_uk_str = df_medium_uk.format(chosenDate);
-            // Display the formatted date
-            viewDate1.setText(df_medium_uk_str);
-        }
-    }
-    //End of DatePickerMethods
-
-    //DatePickerMethods
-    @SuppressLint("ValidFragment")
-    public static class DatePickerFragment2 extends AppCompatDialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog dpd = new DatePickerDialog(getActivity(),
-                    AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
-            return dpd;
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the chosen date
-            viewDate2 = getActivity().findViewById(R.id.endDateET);
-           *//* int actualMonth = month+1; // Because month index start from zero
-            // Display the unformatted date to TextView
-            tvDate.setText("Year : " + year + ", Month : " + actualMonth + ", Day : " + day + "\n\n");*//*
-
-            // Create a Date variable/object with user chosen date
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(0);
-            cal.set(year, month, day, 0, 0, 0);
-            Date chosenDate = cal.getTime();
-
-            // Format the date using style medium and UK locale
-            DateFormat df_medium_uk = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-            String df_medium_uk_str = df_medium_uk.format(chosenDate);
-            // Display the formatted date
-            viewDate2.setText(df_medium_uk_str);
-        }
-    }
-    //End of DatePickerMethods*/
 }
