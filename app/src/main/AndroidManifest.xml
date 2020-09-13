@@ -14,14 +14,14 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        tools:replace="android:allowBackup"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-
-        <activity android:name=".Activity.ProductsDetailsActivity"></activity>
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
+        <activity android:name=".Activity.ProductUpdateActivity"></activity>
+        <activity android:name=".Activity.ProductsDetailsActivity" />
         <activity android:name=".Activity.UserInterfaceContainerActivity" />
         <activity android:name=".Activity.SplashActivity">
             <intent-filter>

@@ -1,34 +1,21 @@
-package com.example.lamp.Fragment;
+package com.example.lamp.Activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.content.CursorLoader;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.loader.content.CursorLoader;
-
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -36,20 +23,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.lamp.Activity.BeforeHomeActivity;
-import com.example.lamp.Activity.UserInterfaceContainerActivity;
 import com.example.lamp.Adapter.CategoryAdapter;
 import com.example.lamp.Adapter.UnitAdapter;
-import com.example.lamp.Adapter.productTypeAdapter;
+import com.example.lamp.Adapter.productsAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.Model.CategoryType;
 import com.example.lamp.Model.UnitType;
-import com.example.lamp.Model.productType;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.R;
@@ -57,12 +40,9 @@ import com.example.lamp.UploadInfo.UploadInfo;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -71,57 +51,38 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class LiveFixedFragment extends Fragment {
-    private Toolbar dToolbar;
-    private Context context;
-    private String retrievedToken, productUnit, productCategory;
+public class ProductUpdateActivity extends AppCompatActivity {
     private EditText title, slug, description, stock, unitPrice, agentId, startedDate, expiredDate;
-    private Button uploadProductBtn;
     private ImageView oneImage, twoImage, threeImage;
-    private SharedPreferences preferences;
-    private Intent oneIntent, twoIntent, threeIntent;
-    private File oneFile, twoFile, threeFile;
-    public static final String TAG = "Live";
-    private Uri oneImageUri, twoImageUri, threeImageUri;
-    private ProgressBar progressBar;
     private Spinner unitSpinner, categorySpinner;
+    private ProgressBar progressBar;
+    private SharedPreferences preferences;
+    private String retrievedToken, productUnit, productCategory;
     private ArrayList<UnitType> mProductUnitList;
     private ArrayList<CategoryType> mProductCategoryList;
     private CategoryAdapter mCategoryAdapter;
     private UnitAdapter mUnitAdapter;
+    private Intent oneIntent, twoIntent, threeIntent;
+    private File oneFile, twoFile, threeFile;
+    private Uri oneImageUri, twoImageUri, threeImageUri;
+    private Button uploadProductBtn;
+    private Datum productData;
 
-    public LiveFixedFragment() {
-        // Required empty public constructor
-    }
-
+    public static final String TAG = "UpdateProduct";
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_live_fixed, container, false);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_product_update);
         inItUnitList();
         inItCategoryList();
 
-        initView(view);
-        preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-        retrievedToken = preferences.getString("TOKEN", null);
-        dToolbar.setTitle(getString(R.string.live_fixed));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            dToolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
+        inItView();
+        Intent intent = getIntent();
+        productData = (Datum) intent.getSerializableExtra("productData");
 
+        showCurrentData();
+        preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+        retrievedToken = preferences.getString("TOKEN", null);
         /////////ImagePicker//////////
         oneImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,55 +127,98 @@ public class LiveFixedFragment extends Fragment {
                                 Log.d(TAG, "Start Time: "+startedDate);
                             }
                         };
-                        new TimePickerDialog(context, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                        new TimePickerDialog(ProductUpdateActivity.this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
                     }
                 };
-                new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(ProductUpdateActivity.this, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         expiredDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            final Calendar calendar = Calendar.getInstance();
-            DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR,year);
-                calendar.set(Calendar.MONTH,month);
-                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-
-                TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                final Calendar calendar = Calendar.getInstance();
+                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    calendar.set(Calendar.MINUTE, minute);
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        calendar.set(Calendar.YEAR,year);
+                        calendar.set(Calendar.MONTH,month);
+                        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
-                    SimpleDateFormat sampleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
-                    expiredDate.setText(sampleDateFormat.format(calendar.getTime()));
-                        Log.d(TAG, "End Time: "+expiredDate);
+                        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                calendar.set(Calendar.MINUTE, minute);
+
+                                SimpleDateFormat sampleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
+                                expiredDate.setText(sampleDateFormat.format(calendar.getTime()));
+                                Log.d(TAG, "End Time: "+expiredDate);
+                            }
+                        };
+                        new TimePickerDialog(ProductUpdateActivity.this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
                     }
                 };
-                new TimePickerDialog(context, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-                }
-            };
-            new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(ProductUpdateActivity.this, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
-    });
+        });
 
-
-    /////////datePicker//////////
+        /////////datePicker//////////
 
         uploadProductBtn.setOnClickListener(new View.OnClickListener()
 
-    {
-        @Override
-        public void onClick (View v){
-        progressBar.setVisibility(View.VISIBLE);
-        StoreProduct();
-    }
-    });
+        {
+            @Override
+            public void onClick (View v){
+                progressBar.setVisibility(View.VISIBLE);
+                StoreProduct();
+            }
+        });
 
-}
+    }
+
+    private void showCurrentData() {
+
+        title.setText(productData.getTitle());
+        slug.setText(productData.getSlug());
+        description.setText(productData.getDescription());
+        stock.setText(productData.getStock());
+        unitPrice.setText(String.valueOf(productData.getUnitPrice()));
+        agentId.setText(productData.getAgentId());
+        startedDate.setText(productData.getStartedAt());
+        expiredDate.setText(productData.getExpiredAt());
+        Picasso.get().load(productData.getPhotos().getOne()).into(oneImage);
+        Picasso.get().load(productData.getPhotos().getTwo()).into(twoImage);
+        Picasso.get().load(productData.getPhotos().getThree()).into(threeImage);
+    }
+
+    /*private void getProductsData() {
+        Log.d(TAG, "getProductsData: started");
+        Retrofit retrofit = RetrofitClient.getRetrofitClient();
+        ApiInterface api = retrofit.create(ApiInterface.class);
+
+        Call<ProductsInfo> call = api.getByProductsQuery("Bearer " + retrievedToken);
+
+        call.enqueue(new Callback<ProductsInfo>() {
+            @Override
+            public void onResponse(Call<ProductsInfo> call, Response<ProductsInfo> response) {
+                Log.d(TAG, "onResponse: "+ response.code());
+                if (response.code() == 200) {
+                    progressBar.setVisibility(View.GONE);
+                    ProductsInfo productsData = response.body();
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ProductsInfo> call, Throwable t) {
+                Toast.makeText(ProductUpdateActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: "+t.getLocalizedMessage());
+            }
+        });
+
+    }*/
 
     private void inItCategoryList() {
         mProductCategoryList = new ArrayList<>();
@@ -233,7 +237,6 @@ public class LiveFixedFragment extends Fragment {
         mProductUnitList.add(new UnitType("ডজন"));
 
     }
-
 
     private void ChooseOneImage() {
         oneIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -279,7 +282,7 @@ public class LiveFixedFragment extends Fragment {
 
     private String getRealPathFromUri(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
+        CursorLoader loader = new CursorLoader(ProductUpdateActivity.this, contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
@@ -328,16 +331,16 @@ public class LiveFixedFragment extends Fragment {
 
                     if (response.code() == 200) {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(context, "Successfully Added your Product", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context, UserInterfaceContainerActivity.class);
-                        context.startActivity(intent);
-                        getActivity().finish();
+                        Toast.makeText(ProductUpdateActivity.this, "Successfully Added your Product", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ProductUpdateActivity.this, UserInterfaceContainerActivity.class);
+                        ProductUpdateActivity.this.startActivity(intent);
+                        finish();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UploadInfo> call, Throwable t) {
-                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductUpdateActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
                 }
             });
@@ -345,30 +348,28 @@ public class LiveFixedFragment extends Fragment {
 
     }
 
-    private void initView(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dToolbar = view.findViewById(R.id.toolbar);
-        }
-        title = view.findViewById(R.id.tvLiveProductTitle);
-        slug = view.findViewById(R.id.tvLiveProductSlug);
-        description = view.findViewById(R.id.tvLiveProductDescription);
-        stock = view.findViewById(R.id.tvLiveProductStock);
-        unitPrice = view.findViewById(R.id.tvLiveProductPrice);
-        unitSpinner = view.findViewById(R.id.spinnerUnitMeasure);
-        categorySpinner = view.findViewById(R.id.spinnerCategory);
-        agentId = view.findViewById(R.id.tvLiveAgentId);
-        startedDate = view.findViewById(R.id.startDateET);
-        expiredDate = view.findViewById(R.id.endDateET);
+    private void inItView() {
 
-        oneImage = view.findViewById(R.id.image1);
-        twoImage = view.findViewById(R.id.image2);
-        threeImage = view.findViewById(R.id.image3);
-        progressBar = view.findViewById(R.id.progressBar);
+        title = findViewById(R.id.tvLiveProductTitle);
+        slug = findViewById(R.id.tvLiveProductSlug);
+        description = findViewById(R.id.tvLiveProductDescription);
+        stock = findViewById(R.id.tvLiveProductStock);
+        unitPrice = findViewById(R.id.tvLiveProductPrice);
+        unitSpinner = findViewById(R.id.spinnerUnitMeasure);
+        categorySpinner = findViewById(R.id.spinnerCategory);
+        agentId = findViewById(R.id.tvLiveAgentId);
+        startedDate = findViewById(R.id.startDateET);
+        expiredDate = findViewById(R.id.endDateET);
+        uploadProductBtn = findViewById(R.id.uploadLiveProductBtn);
 
-        uploadProductBtn = view.findViewById(R.id.uploadLiveProductBtn);
+        oneImage = findViewById(R.id.image1);
+        twoImage = findViewById(R.id.image2);
+        threeImage = findViewById(R.id.image3);
+        progressBar = findViewById(R.id.progressBar);
 
-       mUnitAdapter = new UnitAdapter(context, mProductUnitList);
-       mCategoryAdapter = new CategoryAdapter(context, mProductCategoryList);
+
+        mUnitAdapter = new UnitAdapter(ProductUpdateActivity.this, mProductUnitList);
+        mCategoryAdapter = new CategoryAdapter(ProductUpdateActivity.this, mProductCategoryList);
 
         unitSpinner.setAdapter(mUnitAdapter);
         categorySpinner.setAdapter(mCategoryAdapter);
@@ -380,7 +381,7 @@ public class LiveFixedFragment extends Fragment {
 
                 productUnit = clickedUnit.getUnit();
 
-                Toast.makeText(context, productUnit +" is selected !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductUpdateActivity.this, productUnit +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -396,7 +397,7 @@ public class LiveFixedFragment extends Fragment {
 
                 productCategory = clickedCategory.getCategory();
 
-                Toast.makeText(context, productCategory +" is selected !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductUpdateActivity.this, productCategory +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -405,5 +406,4 @@ public class LiveFixedFragment extends Fragment {
             }
         });
     }
-
 }

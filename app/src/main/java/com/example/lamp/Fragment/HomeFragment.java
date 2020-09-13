@@ -50,9 +50,6 @@ public class HomeFragment extends Fragment {
     SharedPreferences preferences;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Datum> datumArrayList = new ArrayList<>();
-    private ArrayList<Datum> live_fixedArrayList = new ArrayList<>();
-    private ArrayList<Datum> live_auctionArrayList = new ArrayList<>();
-    private ArrayList<Datum> prebook_fixedArrayList = new ArrayList<>();
 
     public static final String TAG = "Home";
 
@@ -85,10 +82,6 @@ public class HomeFragment extends Fragment {
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
 
-        productsAdapter = new productsAdapter(context, datumArrayList);
-        layoutManager = new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
-        productRecyclerView.setLayoutManager(layoutManager);
-        productRecyclerView.setAdapter(productsAdapter);
 
         getAuthUserData();
         getProductsData();
@@ -146,6 +139,10 @@ public class HomeFragment extends Fragment {
                     datumArrayList.addAll(productsData.getData());
                     Log.d(TAG, "onResponse: " + productsData.getData().size());
 
+                    productsAdapter = new productsAdapter(context, datumArrayList);
+                    layoutManager = new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
+                    productRecyclerView.setLayoutManager(layoutManager);
+                    productRecyclerView.setAdapter(productsAdapter);
                     /*for (Datum datum : datumArrayList) {/////for each loop is " object of ArrayList : that ArrayList/////
 
                         if (datum.getType().equals("live_fixed")) {

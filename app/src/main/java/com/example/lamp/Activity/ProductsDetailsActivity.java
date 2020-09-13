@@ -124,6 +124,16 @@ public class ProductsDetailsActivity extends AppCompatActivity {
             }
         });
 
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductsDetailsActivity.this, ProductUpdateActivity.class);
+                intent.putExtra("productData", productData);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
     private void loadProductData() {
