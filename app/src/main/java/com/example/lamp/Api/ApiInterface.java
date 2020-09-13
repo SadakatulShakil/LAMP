@@ -1,11 +1,13 @@
 package com.example.lamp.Api;
 
+import com.example.lamp.Categories.Category;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.Registration.UserRegistration;
+import com.example.lamp.Units.Unit;
 import com.example.lamp.UploadInfo.UploadInfo;
 
 import okhttp3.ResponseBody;
@@ -70,6 +72,27 @@ public interface ApiInterface {
             @Header("Authorization") String token
     );
 
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @Multipart
+    @POST("/api/mobile/products")
+    Call<UploadInfo> postByProductStoreQuery(
+            @Header("Authorization") String token,
+            @Query("title") String title,
+            @Query("slug") String slug,
+            @Query("description") String description,
+            @Part("one\"; filename=\"one.jpg\" " ) RequestBody firstImage,
+            @Part("two\"; filename=\"two.jpg\" " ) RequestBody secondImage,
+            @Part("three\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
+            @Query("type") String type,
+            @Query("expired_at") String expired_at,
+            @Query("started_at") String started_at,
+            @Query("stock") int stock,
+            @Query("unit_price") double unit_price,
+            @Query("unit") String unit,
+            @Query("agent_id") String agent_id,
+            @Query("category") String category
+    );
+
     @Headers("accept: application/json")
     @GET("api/mobile/products")
     Call<ProductsInfo> getByProductsQuery(
@@ -83,25 +106,16 @@ public interface ApiInterface {
             @Path("product_id") String productId
     );
 
-    @Headers("accept: application/json, content-type: multipart/form-data")
-    @Multipart
-    @POST("/api/mobile/login")
-    Call<UploadInfo> postByProductStoreQuery(
-            @Header("Authorization") String token,
-            @Query("title") String title,
-            @Query("slug") String slug,
-            @Query("description") String description,
-            @Part("photo\"; filename=\"one.jpg\" " ) RequestBody firstImage,
-            @Part("photo1\"; filename=\"two.jpg\" " ) RequestBody secondImage,
-            @Part("photo2\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
-            @Query("type") String type,
-            @Query("expired_at") String expired_at,
-            @Query("started_at") String started_at,
-            @Query("stock") String stock,
-            @Query("unit_price") String unit_price,
-            @Query("unit") String unit,
-            @Query("agent_id") String agent_id,
-            @Query("category") String category
+    @Headers("accept: application/json")
+    @GET("/api/mobile/units")
+    Call<Unit> getByProductUnitQuery(
+            @Header("Authorization") String token
+    );
+
+    @Headers("accept: application/json")
+    @GET("/api/mobile/categories")
+    Call<Category> getByProductCategoryQuery(
+            @Header("Authorization") String token
     );
 
 /*

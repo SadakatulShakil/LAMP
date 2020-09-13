@@ -161,22 +161,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvLiveProductStock" />
 
-                <EditText
-                    android:id="@+id/tvLiveProductUnit"
+                <Spinner
+                    android:id="@+id/spinnerUnitMeasure"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
+                    android:spinnerMode="dropdown"
+                    android:overlapAnchor="false"
+                    tools:targetApi="LOLLIPOP"
                     android:layout_margin="16dp"
                     android:background="@drawable/background_et"
-                    android:drawablePadding="20dp"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="Unit measure by"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    android:padding="12dp"
+                    android:prompt="@string/spinner_hint"
+                    app:layout_constraintBottom_toTopOf="@+id/uploadBt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductPrice" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductPrice"
+                    tools:ignore="HardcodedText" />
 
                 <EditText
                     android:id="@+id/tvLiveAgentId"
@@ -193,24 +192,23 @@
                     android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductUnit" />
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerUnitMeasure" />
 
-                <EditText
-                    android:id="@+id/tvLiveProductCategory"
+                <Spinner
+                    android:id="@+id/spinnerCategory"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
+                    android:spinnerMode="dropdown"
+                    android:overlapAnchor="false"
+                    tools:targetApi="LOLLIPOP"
                     android:layout_margin="16dp"
                     android:background="@drawable/background_et"
-                    android:drawablePadding="20dp"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="Category"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapWords"
-                    android:padding="12dp"
+                    android:prompt="@string/spinner_hint"
+                    app:layout_constraintBottom_toTopOf="@+id/uploadBt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLiveAgentId" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvLiveAgentId"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:id="@+id/startTimeLayout"
@@ -218,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory">
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerCategory">
 
                     <EditText
                         android:id="@+id/startDateET"
@@ -247,9 +245,7 @@
                         android:hint="Start time"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/startDateET"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                 </LinearLayout>
 
@@ -289,9 +285,7 @@
                         android:hint="Start time"
                         android:imeOptions="actionNext"
                         android:padding="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/startDateET"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLiveProductCategory" />
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                 </LinearLayout>
 

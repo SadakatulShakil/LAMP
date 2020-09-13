@@ -46,7 +46,7 @@ public class productsAdapter extends RecyclerView.Adapter<productsAdapter.viewHo
         String unitMeasure = productsInfo.getUnit();
         holder.productUnitPrice.setText(unitPrice+"৳/"+unitMeasure);
         String stockAmount = String.valueOf(productsInfo.getStock());
-        holder.productStock.setText("Stock: "+stockAmount+unitMeasure);
+        holder.productType.setText(productsInfo.getType());
         String productImageUri = productsInfo.getPhotos().getOne();
         Picasso.get().load(productImageUri).into(holder.productImage);
 
@@ -69,14 +69,14 @@ public class productsAdapter extends RecyclerView.Adapter<productsAdapter.viewHo
     public class viewHolder extends RecyclerView.ViewHolder {
         private ImageView productImage;
         private CardView productView;
-        private TextView productTitle, productUnitPrice, productStock;
+        private TextView productTitle, productUnitPrice, productType;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
 
             productImage = itemView.findViewById(R.id.productImage);
             productTitle = itemView.findViewById(R.id.productTitle);
             productUnitPrice = itemView.findViewById(R.id.productUnitPrice);
-            productStock = itemView.findViewById(R.id.productStock);
+            productType = itemView.findViewById(R.id.productType);
             productView = itemView.findViewById(R.id.productsLayout);
         }
     }

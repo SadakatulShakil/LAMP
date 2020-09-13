@@ -21,6 +21,7 @@ import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.Fragment.HomeFragment;
 import com.example.lamp.Fragment.ProductsDetailsFragment;
+import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.MainActivity;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.R;
@@ -37,6 +38,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
     private ImageView previewImage, thumbnail1, thumbnail2, thumbnail3;
     private TextView delete, title, description, price, stock, startDate, endDate;
     private Toolbar dToolbar;
+    private String userType = "";
     private Datum productData;
     private SharedPreferences preferences;
     private String retrievedToken;
@@ -55,10 +57,37 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         productData = (Datum) intent.getSerializableExtra("productData");
         preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
-
+        loadAuthData();
         loadProductData();
         ClickEvents();
 
+    }
+
+    private void loadAuthData() {
+        if (retrievedToken != null) {
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+
+            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer " + retrievedToken);
+            call.enqueue(new Callback<UpdateUserInfo>() {
+                @Override
+                public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
+                    if (response.code() == 200) {
+                        UpdateUserInfo updateUserInfo = response.body();
+                        userType = updateUserInfo.getType();
+                        if(userType.equals("whole seller")){
+                            delete.setText("Order now!");
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
+                    Toast.makeText(ProductsDetailsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
+                }
+            });
+        }
     }
 
     private void ClickEvents() {
@@ -153,7 +182,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         thumbnail3 = findViewById(R.id.thumbnail3);
 
         update = findViewById(R.id.updateFAB);
-        delete = findViewById(R.id.deleteTv);
+        delete = findViewById(R.id.demoForDetails);
         title = findViewById(R.id.titleTv);
         description = findViewById(R.id.productDescriptionTv);
         stock = findViewById(R.id.stockTv);

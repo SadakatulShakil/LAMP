@@ -37,10 +37,10 @@ public class Datum implements Serializable {
     private String unit;
     @SerializedName("unit_price")
     @Expose
-    private Integer unitPrice;
+    private Double unitPrice;
     @SerializedName("min_bid_price")
     @Expose
-    private Integer minBidPrice;
+    private Double minBidPrice;
     @SerializedName("category")
     @Expose
     private String category;
@@ -132,19 +132,19 @@ public class Datum implements Serializable {
         this.unit = unit;
     }
 
-    public Integer getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Integer unitPrice) {
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getMinBidPrice() {
+    public Double getMinBidPrice() {
         return minBidPrice;
     }
 
-    public void setMinBidPrice(Integer minBidPrice) {
+    public void setMinBidPrice(Double minBidPrice) {
         this.minBidPrice = minBidPrice;
     }
 

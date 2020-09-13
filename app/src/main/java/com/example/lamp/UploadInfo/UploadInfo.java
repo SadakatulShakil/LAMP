@@ -4,7 +4,9 @@ package com.example.lamp.UploadInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UploadInfo {
+import java.io.Serializable;
+
+public class UploadInfo implements Serializable {
 
     @SerializedName("_id")
     @Expose
@@ -35,10 +37,10 @@ public class UploadInfo {
     private String unit;
     @SerializedName("unit_price")
     @Expose
-    private Integer unitPrice;
+    private Double unitPrice;
     @SerializedName("min_bid_price")
     @Expose
-    private Integer minBidPrice;
+    private Double minBidPrice;
     @SerializedName("category")
     @Expose
     private String category;
@@ -130,19 +132,19 @@ public class UploadInfo {
         this.unit = unit;
     }
 
-    public Integer getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Integer unitPrice) {
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getMinBidPrice() {
+    public Double getMinBidPrice() {
         return minBidPrice;
     }
 
-    public void setMinBidPrice(Integer minBidPrice) {
+    public void setMinBidPrice(Double minBidPrice) {
         this.minBidPrice = minBidPrice;
     }
 

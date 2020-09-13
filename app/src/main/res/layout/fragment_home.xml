@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,96 +13,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/white" />
 
-    <ScrollView
-        android:id="@+id/productView"
+    <TextView
+        android:id="@+id/demoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Products :"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black_lite"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewForProducts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/demoText"
+        tools:itemCount="5"
+        tools:listitem="@layout/product_view" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <!-- <TextView
+         android:id="@+id/demoText1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="5dp"
+         android:text="Pre Book Fixed"
+         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+         android:textColor="@color/black_lite"
+         android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/demoText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Live Product Fixed"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/black_lite"
-                android:textStyle="bold" />
+     <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/recyclerViewForPreBooked"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+         tools:itemCount="3"
+         tools:listitem="@layout/product_view" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewForLiveFixed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/demoText"
-                tools:itemCount="3"
-                tools:listitem="@layout/product_view" />
+     <TextView
+         android:id="@+id/demoText2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="5dp"
+         android:text="Live Auction"
+         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+         android:textColor="@color/black_lite"
+         android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/demoText1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Pre Book Fixed"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/black_lite"
-                android:textStyle="bold" />
+     <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/recyclerViewForAuction"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+         tools:itemCount="3"
+         tools:listitem="@layout/product_view" />
+-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewForPreBooked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/product_view" />
-
-            <TextView
-                android:id="@+id/demoText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Live Auction"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/black_lite"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewForAuction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/product_view" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/progressBarLayout"
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:elevation="5dp"
-            />
-    </RelativeLayout>
-
-
-</LinearLayout>
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>

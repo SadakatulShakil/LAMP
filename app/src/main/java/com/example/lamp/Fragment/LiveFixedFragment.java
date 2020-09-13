@@ -29,19 +29,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.lamp.Activity.BeforeHomeActivity;
 import com.example.lamp.Activity.UserInterfaceContainerActivity;
+import com.example.lamp.Adapter.CategoryAdapter;
+import com.example.lamp.Adapter.UnitAdapter;
+import com.example.lamp.Adapter.productTypeAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
+import com.example.lamp.Model.CategoryType;
+import com.example.lamp.Model.UnitType;
+import com.example.lamp.Model.productType;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.R;
@@ -50,6 +58,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -64,7 +73,7 @@ import retrofit2.Retrofit;
 public class LiveFixedFragment extends Fragment {
     private Toolbar dToolbar;
     private Context context;
-    private String retrievedToken;
+    private String retrievedToken, productUnit, productCategory;
     private EditText title, slug, description, stock, unitPrice, unit, agentId, category, startedDate, expiredDate, startTime, endTime;
     private Button uploadProductBtn;
     private ImageView oneImage, twoImage, threeImage;
@@ -75,6 +84,11 @@ public class LiveFixedFragment extends Fragment {
     public static final String TAG = "Live";
     private Uri oneImageUri, twoImageUri, threeImageUri;
     private ProgressBar progressBar;
+    private Spinner unitSpinner, categorySpinner;
+    private ArrayList<UnitType> mProductUnitList;
+    private ArrayList<CategoryType> mProductCategoryList;
+    private CategoryAdapter mCategoryAdapter;
+    private UnitAdapter mUnitAdapter;
 
     public LiveFixedFragment() {
         // Required empty public constructor
@@ -97,6 +111,8 @@ public class LiveFixedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        inItUnitList();
+        inItCategoryList();
         initView(view);
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
@@ -236,6 +252,24 @@ public class LiveFixedFragment extends Fragment {
 
 }
 
+    private void inItCategoryList() {
+        mProductCategoryList = new ArrayList<>();
+        mProductCategoryList.add(new CategoryType("Select Category..."));
+        mProductCategoryList.add(new CategoryType("ফল"));
+        mProductCategoryList.add(new CategoryType("পোলট্রি"));
+        mProductCategoryList.add(new CategoryType("সবজি"));
+
+    }
+
+    private void inItUnitList() {
+        mProductUnitList = new ArrayList<>();
+        mProductUnitList.add(new UnitType("Select Unit..."));
+        mProductUnitList.add(new UnitType("কেজি"));
+        mProductUnitList.add(new UnitType("মণ"));
+        mProductUnitList.add(new UnitType("ডজন"));
+
+    }
+
 
     private void ChooseOneImage() {
         oneIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -295,13 +329,13 @@ public class LiveFixedFragment extends Fragment {
         String pTitle = "তরমুজ";//title.getText().toString().trim();
         String pDescription = "তরমুজ অনেক ভালো খাবার";//description.getText().toString().trim();
         String pSlug = "water-melon";//slug.getText().toString().trim();
-        String pStock = "1000";//stock.getText().toString().trim();
-        String pUnitPrice = "50";//unitPrice.getText().toString().trim();
+        int pStock = 1000;//stock.getText().toString().trim();
+        double pUnitPrice = 50;//unitPrice.getText().toString().trim();
         String pUnit = "কেজি";//unit.getText().toString().trim();
         String pAgentId = "১১০০১১";//agentId.getText().toString().trim();
         String pCategory = "ফল";//category.getText().toString().trim();
-        String pStartAt = "১১/09/2020";//startedDate.getText().toString().trim()+ ","+startTime.getText().toString().trim();
-        String pExpireAt = "১২/09/2020";//expiredDate.getText().toString().trim()+ ","+endTime.getText().toString().trim();
+        String pStartAt = "2020-05-08T18:00:00.000000Z";//startedDate.getText().toString().trim()+ ","+startTime.getText().toString().trim();
+        String pExpireAt = "2020-10-08T18:00:00.000000Z";//expiredDate.getText().toString().trim()+ ","+endTime.getText().toString().trim();
 
         oneFile = new File(getRealPathFromUri(oneImageUri));
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), oneFile);
@@ -356,9 +390,9 @@ public class LiveFixedFragment extends Fragment {
         description = view.findViewById(R.id.tvLiveProductDescription);
         stock = view.findViewById(R.id.tvLiveProductStock);
         unitPrice = view.findViewById(R.id.tvLiveProductPrice);
-        unit = view.findViewById(R.id.tvLiveProductUnit);
+        unitSpinner = view.findViewById(R.id.spinnerUnitMeasure);
+        categorySpinner = view.findViewById(R.id.spinnerCategory);
         agentId = view.findViewById(R.id.tvLiveAgentId);
-        category = view.findViewById(R.id.tvLiveProductCategory);
         startedDate = view.findViewById(R.id.startDateET);
         expiredDate = view.findViewById(R.id.endDateET);
         startTime = view.findViewById(R.id.startTimeET);
@@ -370,6 +404,44 @@ public class LiveFixedFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
 
         uploadProductBtn = view.findViewById(R.id.uploadLiveProductBtn);
+
+       mUnitAdapter = new UnitAdapter(context, mProductUnitList);
+       mCategoryAdapter = new CategoryAdapter(context, mProductCategoryList);
+
+        unitSpinner.setAdapter(mUnitAdapter);
+        categorySpinner.setAdapter(mCategoryAdapter);
+
+        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UnitType clickedUnit = (UnitType) parent.getItemAtPosition(position);
+
+                productUnit = clickedUnit.getUnit();
+
+                Toast.makeText(context, productUnit +" is selected !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CategoryType clickedCategory = (CategoryType) parent.getItemAtPosition(position);
+
+                productCategory = clickedCategory.getCategory();
+
+                Toast.makeText(context, productCategory +" is selected !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 }

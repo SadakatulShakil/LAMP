@@ -42,13 +42,13 @@ public class HomeFragment extends Fragment {
 
     private Context context;
     private Toolbar dToolbar;
-    private RecyclerView live_fixed_Rv, live_auction_Rv, preBooked_Rv;
+    private RecyclerView productRecyclerView, live_fixed_Rv, live_auction_Rv, preBooked_Rv;
     private productsAdapter productsAdapter;
     private ScrollView scViewOfProduct;
-    private RelativeLayout progressBarLayout;
     private ProgressBar progressBar;
     private String retrievedToken;
     SharedPreferences preferences;
+    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Datum> datumArrayList = new ArrayList<>();
     private ArrayList<Datum> live_fixedArrayList = new ArrayList<>();
     private ArrayList<Datum> live_auctionArrayList = new ArrayList<>();
@@ -80,11 +80,15 @@ public class HomeFragment extends Fragment {
         inItView(view);
         dToolbar.setTitle(getString(R.string.home));
 
-        progressBarLayout.setVisibility(View.VISIBLE);
-        scViewOfProduct.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
+
+        productsAdapter = new productsAdapter(context, datumArrayList);
+        layoutManager = new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
+        productRecyclerView.setLayoutManager(layoutManager);
+        productRecyclerView.setAdapter(productsAdapter);
 
         getAuthUserData();
         getProductsData();
@@ -120,6 +124,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getProductsData() {
+        Log.d(TAG, "getProductsData: started");
         Retrofit retrofit = RetrofitClient.getRetrofitClient();
         ApiInterface api = retrofit.create(ApiInterface.class);
 
@@ -128,20 +133,20 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<ProductsInfo>() {
             @Override
             public void onResponse(Call<ProductsInfo> call, Response<ProductsInfo> response) {
+                Log.d(TAG, "onResponse: "+ response.code());
                 if (response.code() == 200) {
-                    progressBarLayout.setVisibility(View.GONE);
-                    scViewOfProduct.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                     ProductsInfo productsData = response.body();
 
                     datumArrayList.clear();
-                    live_fixedArrayList.clear();
+                    /*live_fixedArrayList.clear();
                     prebook_fixedArrayList.clear();
-                    live_auctionArrayList.clear();
+                    live_auctionArrayList.clear();*/
 
                     datumArrayList.addAll(productsData.getData());
                     Log.d(TAG, "onResponse: " + productsData.getData().size());
 
-                    for (Datum datum : datumArrayList) {/////for each loop is " object of ArrayList : that ArrayList/////
+                    /*for (Datum datum : datumArrayList) {/////for each loop is " object of ArrayList : that ArrayList/////
 
                         if (datum.getType().equals("live_fixed")) {
                             live_fixedArrayList.add(datum);
@@ -168,7 +173,8 @@ public class HomeFragment extends Fragment {
                             productsAdapter.notifyDataSetChanged();
                             Log.d(TAG, "onResponse: Prebook" + prebook_fixedArrayList.size());
                         }
-                    }
+                    }*/
+
 
                 }
 
@@ -176,7 +182,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ProductsInfo> call, Throwable t) {
-
+                Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: "+t.getLocalizedMessage());
             }
         });
 
@@ -186,12 +193,11 @@ public class HomeFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dToolbar = view.findViewById(R.id.toolbar);
         }
-        live_fixed_Rv = view.findViewById(R.id.recyclerViewForLiveFixed);
-        live_auction_Rv = view.findViewById(R.id.recyclerViewForAuction);
-        preBooked_Rv = view.findViewById(R.id.recyclerViewForPreBooked);
+        productRecyclerView = view.findViewById(R.id.recyclerViewForProducts);
+        /*live_auction_Rv = view.findViewById(R.id.recyclerViewForAuction);
+        preBooked_Rv = view.findViewById(R.id.recyclerViewForPreBooked);*/
 
         scViewOfProduct = view.findViewById(R.id.productView);
-        progressBarLayout = view.findViewById(R.id.progressBarLayout);
         progressBar = view.findViewById(R.id.progressBar);
     }
 }
