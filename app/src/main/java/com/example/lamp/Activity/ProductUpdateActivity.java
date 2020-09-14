@@ -2,6 +2,7 @@ package com.example.lamp.Activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -28,14 +30,17 @@ import android.widget.Toast;
 
 import com.example.lamp.Adapter.CategoryAdapter;
 import com.example.lamp.Adapter.UnitAdapter;
+import com.example.lamp.Adapter.productTypeAdapter;
 import com.example.lamp.Adapter.productsAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
 import com.example.lamp.Model.CategoryType;
 import com.example.lamp.Model.UnitType;
+import com.example.lamp.Model.productType;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.R;
+import com.example.lamp.UpdateProduct.UpdateProduct;
 import com.example.lamp.UploadInfo.UploadInfo;
 import com.squareup.picasso.Picasso;
 
@@ -54,19 +59,22 @@ import retrofit2.Retrofit;
 public class ProductUpdateActivity extends AppCompatActivity {
     private EditText title, slug, description, stock, unitPrice, agentId, startedDate, expiredDate;
     private ImageView oneImage, twoImage, threeImage;
-    private Spinner unitSpinner, categorySpinner;
+    private Spinner unitSpinner, categorySpinner,productTypeSpinner;
     private ProgressBar progressBar;
     private SharedPreferences preferences;
-    private String retrievedToken, productUnit, productCategory;
+    private String retrievedToken, productUnit, productCategory,productType;
     private ArrayList<UnitType> mProductUnitList;
     private ArrayList<CategoryType> mProductCategoryList;
     private CategoryAdapter mCategoryAdapter;
     private UnitAdapter mUnitAdapter;
+    private ArrayList<productType> mProductTypeList;
+    private productTypeAdapter mAdapter;
     private Intent oneIntent, twoIntent, threeIntent;
     private File oneFile, twoFile, threeFile;
     private Uri oneImageUri, twoImageUri, threeImageUri;
     private Button uploadProductBtn;
     private Datum productData;
+    private Toolbar dToolbar;
 
     public static final String TAG = "UpdateProduct";
     @Override
@@ -75,8 +83,9 @@ public class ProductUpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_update);
         inItUnitList();
         inItCategoryList();
-
+        inItProductTypeList();
         inItView();
+        dToolbar.setTitle(getString(R.string.update));
         Intent intent = getIntent();
         productData = (Datum) intent.getSerializableExtra("productData");
 
@@ -176,12 +185,13 @@ public class ProductUpdateActivity extends AppCompatActivity {
 
     }
 
+
     private void showCurrentData() {
 
         title.setText(productData.getTitle());
         slug.setText(productData.getSlug());
         description.setText(productData.getDescription());
-        stock.setText(productData.getStock());
+        stock.setText(String.valueOf(productData.getStock()));
         unitPrice.setText(String.valueOf(productData.getUnitPrice()));
         agentId.setText(productData.getAgentId());
         startedDate.setText(productData.getStartedAt());
@@ -238,6 +248,14 @@ public class ProductUpdateActivity extends AppCompatActivity {
 
     }
 
+    private void inItProductTypeList() {
+        mProductTypeList = new ArrayList<>();
+        mProductTypeList.add(new productType("Select Product Type..."));
+        mProductTypeList.add(new productType("live_fixed"));
+        mProductTypeList.add(new productType("prebook_fixed"));
+        mProductTypeList.add(new productType("live_auction"));
+    }
+
     private void ChooseOneImage() {
         oneIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(oneIntent, 1);
@@ -292,7 +310,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
     }
 
     private void StoreProduct() {
-        String type = "live_fixed";
+        String type = productType;
         String pTitle = title.getText().toString().trim();
         String pDescription = description.getText().toString().trim();
         String pSlug = slug.getText().toString().trim();
@@ -320,18 +338,18 @@ public class ProductUpdateActivity extends AppCompatActivity {
             ApiInterface api = retrofit.create(ApiInterface.class);
 
 
-            Call<UploadInfo> call = api.postByProductStoreQuery("Bearer " + retrievedToken,
+            Call<UpdateProduct> call = api.postByProductUpdateQuery("Bearer " + retrievedToken, productData.getId(),
                     pTitle, pSlug, pDescription, requestBody, requestBody1, requestBody2, type,
                     pExpireAt, pStartAt, pStock, pUnitPrice, pUnit, pAgentId, pCategory);
 
-            call.enqueue(new Callback<UploadInfo>() {
+            call.enqueue(new Callback<UpdateProduct>() {
                 @Override
-                public void onResponse(Call<UploadInfo> call, Response<UploadInfo> response) {
+                public void onResponse(Call<UpdateProduct> call, Response<UpdateProduct> response) {
                     Log.d(TAG, "onResponse: response code: " + response.code());
 
                     if (response.code() == 200) {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(ProductUpdateActivity.this, "Successfully Added your Product", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductUpdateActivity.this, "Successfully Updated your Product", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(ProductUpdateActivity.this, UserInterfaceContainerActivity.class);
                         ProductUpdateActivity.this.startActivity(intent);
                         finish();
@@ -339,7 +357,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<UploadInfo> call, Throwable t) {
+                public void onFailure(Call<UpdateProduct> call, Throwable t) {
                     Toast.makeText(ProductUpdateActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
                 }
@@ -349,7 +367,9 @@ public class ProductUpdateActivity extends AppCompatActivity {
     }
 
     private void inItView() {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dToolbar = findViewById(R.id.toolbar);
+        }
         title = findViewById(R.id.tvLiveProductTitle);
         slug = findViewById(R.id.tvLiveProductSlug);
         description = findViewById(R.id.tvLiveProductDescription);
@@ -357,6 +377,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
         unitPrice = findViewById(R.id.tvLiveProductPrice);
         unitSpinner = findViewById(R.id.spinnerUnitMeasure);
         categorySpinner = findViewById(R.id.spinnerCategory);
+        productTypeSpinner = findViewById(R.id.spinnerProductType);
         agentId = findViewById(R.id.tvLiveAgentId);
         startedDate = findViewById(R.id.startDateET);
         expiredDate = findViewById(R.id.endDateET);
@@ -398,6 +419,26 @@ public class ProductUpdateActivity extends AppCompatActivity {
                 productCategory = clickedCategory.getCategory();
 
                 Toast.makeText(ProductUpdateActivity.this, productCategory +" is selected !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mAdapter = new productTypeAdapter(ProductUpdateActivity.this, mProductTypeList);
+
+        productTypeSpinner.setAdapter(mAdapter);
+
+        productTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                productType clickedType = (productType) parent.getItemAtPosition(position);
+
+                productType = clickedType.getProductType();
+
+                Toast.makeText(ProductUpdateActivity.this, productType +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override

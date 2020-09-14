@@ -70,8 +70,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-                else if(retrievedToken != null
-                        && retrieveType.equals("farmer")){
+                else if(retrievedToken != null){
                     Intent intent = new Intent(SplashActivity.this, UserInterfaceContainerActivity.class);
                     startActivity(intent);
                     finish();

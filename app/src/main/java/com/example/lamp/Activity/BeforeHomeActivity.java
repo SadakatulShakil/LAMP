@@ -122,6 +122,15 @@ public class BeforeHomeActivity extends AppCompatActivity {
                         }else if(updateUserInfo.getType().equals("agent")){
                             rb3.setChecked(true);
                         }
+                        Toast.makeText(BeforeHomeActivity.this, "user type: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onResponse: " + updateUserInfo.getType());
+                        cityET.setText(updateUserInfo.getAddress().getCity());
+                        zipET.setText(updateUserInfo.getAddress().getZip());
+                        locationET.setText(updateUserInfo.getAddress().getLocation());
+                        countryET.setText(updateUserInfo.getAddress().getCountry());
+
+                        /*Picasso.get().load(updateUserInfo.getPhoto()).into(proImageView);
+                        Picasso.get().load(updateUserInfo.getNid()).into(nidImageView);*/
 
                     }
 
@@ -187,19 +196,11 @@ public class BeforeHomeActivity extends AppCompatActivity {
                                     progressBar.setVisibility(View.GONE);
                                     UpdateUserInfo updateUserInfo = response.body();
                                     Toast.makeText(BeforeHomeActivity.this, "User Name: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
-                                    if(updateUserInfo.getType().equals("farmer")){
+
                                         Intent intent = new Intent(BeforeHomeActivity.this, UserInterfaceContainerActivity.class);
                                         startActivity(intent);
                                         finish();
-                                    }else if(updateUserInfo.getType().equals("wholeseller")){
-                                        Intent intent = new Intent(BeforeHomeActivity.this, WholeSellerActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else if(updateUserInfo.getType().equals("agent")){
-                                        Intent intent = new Intent(BeforeHomeActivity.this, AgentActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
+
                                     preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                                     preferences.edit().putBoolean("isFirstLog", true).apply();
                                 }

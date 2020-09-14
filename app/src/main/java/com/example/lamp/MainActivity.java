@@ -83,14 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
                             Log.d(TAG, "onResponse: "+userLogin.getToken());
                             boolean isFirstLog = preferences.getBoolean("isFirstLog", false);
-                            if(isFirstLog && userLogin.getUser().getType().equals("farmer")){
+                            if(isFirstLog){
                                 Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this, UserInterfaceContainerActivity.class);
                                 //intent.putExtra("loginResponse", userLogin);
                                 startActivity(intent);
                                 finish();
                             }else{
-
                                 Toast.makeText(MainActivity.this, "Name is !" + userLogin.getUser().getName(), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this, BeforeHomeActivity.class);
                                 //intent.putExtra("loginResponse", userLogin);

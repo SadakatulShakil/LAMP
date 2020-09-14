@@ -1,16 +1,16 @@
 package com.example.lamp.Api;
 
+import com.example.lamp.OrderStore.OrderStore;
+import com.example.lamp.Orders.Orders;
 import com.example.lamp.Categories.Category;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
-import com.example.lamp.FullUserInfo.UserLogOut;
 import com.example.lamp.Login.UserLogin;
-import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.ProductsInfo.ProductsInfo;
 import com.example.lamp.Registration.UserRegistration;
 import com.example.lamp.Units.Unit;
+import com.example.lamp.UpdateProduct.UpdateProduct;
 import com.example.lamp.UploadInfo.UploadInfo;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import okhttp3.RequestBody;
 import retrofit2.http.GET;
@@ -76,22 +76,22 @@ public interface ApiInterface {
     @Multipart
     @POST("/api/mobile/products")
     Call<UploadInfo> postByProductStoreQuery(
-            @Header("Authorization") String token,
-            @Query("title") String title,
-            @Query("slug") String slug,
-            @Query("description") String description,
-            @Part("one\"; filename=\"one.jpg\" " ) RequestBody firstImage,
-            @Part("two\"; filename=\"two.jpg\" " ) RequestBody secondImage,
-            @Part("three\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
-            @Query("type") String type,
-            @Query("expired_at") String expired_at,
-            @Query("started_at") String started_at,
-            @Query("stock") int stock,
-            @Query("unit_price") double unit_price,
-            @Query("unit") String unit,
-            @Query("agent_id") String agent_id,
-            @Query("category") String category
-    );
+                    @Header("Authorization") String token,
+                    @Query("title") String title,
+                    @Query("slug") String slug,
+                    @Query("description") String description,
+                    @Part("one\"; filename=\"one.jpg\" " ) RequestBody firstImage,
+                    @Part("two\"; filename=\"two.jpg\" " ) RequestBody secondImage,
+                    @Part("three\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
+                    @Query("type") String type,
+                    @Query("expired_at") String expired_at,
+                    @Query("started_at") String started_at,
+                    @Query("stock") int stock,
+                    @Query("unit_price") double unit_price,
+                    @Query("unit") String unit,
+                    @Query("agent_id") String agent_id,
+                    @Query("category") String category
+            );
 
     @Headers("accept: application/json")
     @GET("api/mobile/products")
@@ -118,6 +118,52 @@ public interface ApiInterface {
             @Header("Authorization") String token
     );
 
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @Multipart
+    @POST("/api/mobile/products/{product_id}")
+    Call<UpdateProduct> postByProductUpdateQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String productId,
+            @Query("title") String title,
+            @Query("slug") String slug,
+            @Query("description") String description,
+            @Part("one\"; filename=\"one.jpg\" " ) RequestBody firstImage,
+            @Part("two\"; filename=\"two.jpg\" " ) RequestBody secondImage,
+            @Part("three\"; filename=\"three.jpg\" " ) RequestBody thirdImage,
+            @Query("type") String type,
+            @Query("expired_at") String expired_at,
+            @Query("started_at") String started_at,
+            @Query("stock") int stock,
+            @Query("unit_price") double unit_price,
+            @Query("unit") String unit,
+            @Query("agent_id") String agent_id,
+            @Query("category") String category
+    );
+
+    @Headers("accept: application/json")
+    @GET("/api/mobile/orders")
+    Call<Orders> getByOrdersQuery(
+            @Header("Authorization") String token
+    );
+
+
+    @Headers("accept: application/json , content-type: multipart/form-data")
+    @POST("/api/mobile/products/{product_id}/order")
+    Call<OrderStore> postByOrderStoreQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String productId,
+            @Query("name") String name,
+            @Query("email") String email,
+            @Query("phone") String phone,
+            @Query("location") String location,
+            @Query("country") String country,
+            @Query("city") String city,
+            @Query("zip") String zip,
+            @Query("quantity") int quantity,
+            @Query("from") String from,
+            @Query("to") String to
+    );
 /*
     @GET()
     Call<List<UserPost>> getByPostUrl(

@@ -75,8 +75,16 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
                         userType = updateUserInfo.getType();
-                        if(userType.equals("whole seller")){
+                        if(userType.equals("wholeseller")){
                             delete.setText("Order now!");
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ProductsDetailsActivity.this, OrderProductActivity.class);
+                                    intent.putExtra("productData", productData);
+                                    startActivity(intent);
+                                }
+                            });
                         }
                     }
                 }

@@ -8,6 +8,7 @@
     <color name="black_lite">#B7000000</color>
     <color name="red">#D1392D</color>
     <color name="app_background">#e0e0e0</color>
+    <color name="ash">#B4706B6B</color>
     <color name="white">#FFFFFF</color>
 
 </resources>
