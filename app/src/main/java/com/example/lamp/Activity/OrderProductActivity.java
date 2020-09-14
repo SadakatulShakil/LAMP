@@ -76,6 +76,8 @@ public class OrderProductActivity extends AppCompatActivity {
         String oCity = city.getText().toString().trim();
         String oZip = zip.getText().toString().trim();
         String oCountry = country.getText().toString().trim();
+        String oDeliveryFromCity = deliverCity1;
+        String oDeliverToCity = deliveryCity2;
         int oQuantity = Integer.parseInt(quantity.getText().toString().trim());
 
         if (retrievedToken != null) {
@@ -83,7 +85,7 @@ public class OrderProductActivity extends AppCompatActivity {
             ApiInterface api = retrofit.create(ApiInterface.class);
 
             Call<OrderStore> call = api.postByOrderStoreQuery("Bearer " + retrievedToken, productData.getId(),
-                    oName, oEmail, oPhone, oLocation, oCountry, oCity, oZip, oQuantity, deliverCity1, deliveryCity2);
+                    oName, oEmail, oPhone, oLocation, oCountry, oCity, oZip, oQuantity, oDeliveryFromCity, oDeliverToCity);
 
             call.enqueue(new Callback<OrderStore>() {
                 @Override
@@ -91,7 +93,7 @@ public class OrderProductActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: " +response.code());
                     if(response.code() == 200){
                         OrderStore orders = response.body();
-                        Toast.makeText(OrderProductActivity.this, "Successfully Updated your Product", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderProductActivity.this, "Successfully Updated your Order", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(OrderProductActivity.this, UserInterfaceContainerActivity.class);
                         startActivity(intent);
                         finish();

@@ -148,7 +148,7 @@ public interface ApiInterface {
     );
 
 
-    @Headers("accept: application/json , content-type: multipart/form-data")
+    @Headers("accept: application/json, content-type: multipart/form-data")
     @POST("/api/mobile/products/{product_id}/order")
     Call<OrderStore> postByOrderStoreQuery(
             @Header("Authorization") String token,
