@@ -217,6 +217,50 @@
 
                 </LinearLayout>
 
+                <EditText
+                    android:id="@+id/commentsEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/border_round"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:hint="Drop a comment here"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="12dp" />
+
+                <Button
+                    android:id="@+id/sendCommentBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/round_txt_design"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableRight="@drawable/ic_send"
+                    android:drawablePadding="8dp"
+                    android:elevation="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:visibility="gone"
+                    android:text="Send"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:textStyle="bold"/>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewForCommentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/comment_view" />
+
             </LinearLayout>
 
         </ScrollView>

@@ -2,6 +2,7 @@ package com.example.lamp.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +41,7 @@ public class OrdersFragment extends Fragment {
     private String retrievedToken;
     private ProgressBar progressBar;
     public static final String TAG = "Order";
+    private Toolbar dToolbar;
 
     public OrdersFragment() {
         // Required empty public constructor
@@ -62,6 +65,7 @@ public class OrdersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         inItView(view);
+        dToolbar.setTitle(getString(R.string.order));
         progressBar.setVisibility(View.VISIBLE);
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
@@ -88,10 +92,10 @@ public class OrdersFragment extends Fragment {
 
                         datumArrayList.addAll(orderInfo.getData());
                         mOrderAdapter = new OrdersAdapter(context, datumArrayList);
-                        orderRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, true));
+                        orderRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, true));
                         orderRecyclerView.setAdapter(mOrderAdapter);
                         mOrderAdapter.notifyDataSetChanged();
-                        Log.d(TAG, "onResponse: Fixed" + datumArrayList.size());
+                        Log.d(TAG, "onResponse: order " + datumArrayList.size());
                     }
                 }
 
@@ -107,6 +111,10 @@ public class OrdersFragment extends Fragment {
 
     }
     private void inItView (View view){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dToolbar = view.findViewById(R.id.toolbar);
+        }
         progressBar = view.findViewById(R.id.progressBar);
         orderRecyclerView = view.findViewById(R.id.recyclerViewForOrders);
     }

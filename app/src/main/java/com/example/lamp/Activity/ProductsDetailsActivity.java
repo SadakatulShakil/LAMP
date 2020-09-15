@@ -1,10 +1,5 @@
 package com.example.lamp.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,17 +7,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
-import com.example.lamp.Fragment.HomeFragment;
-import com.example.lamp.Fragment.ProductsDetailsFragment;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
-import com.example.lamp.MainActivity;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,6 +40,8 @@ public class ProductsDetailsActivity extends AppCompatActivity {
     private String retrievedToken;
     public static final String TAG = "Details";
     private FloatingActionButton update;
+    private EditText commentsField;
+    private Button sendCommentBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +81,23 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                                     Intent intent = new Intent(ProductsDetailsActivity.this, OrderProductActivity.class);
                                     intent.putExtra("productData", productData);
                                     startActivity(intent);
+                                }
+                            });
+
+                            update.setImageDrawable(getResources().getDrawable(R.drawable.ic_message));
+
+                            update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    commentsField.setVisibility(View.VISIBLE);
+                                    sendCommentBtn.setVisibility(View.VISIBLE);
+
+                                    sendCommentBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                             ///////////////////Do comment section task here /////////////////////
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -207,5 +222,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         startDate = findViewById(R.id.startDateTv);
         endDate = findViewById(R.id.endDateTv);
         price = findViewById(R.id.priceTv);
+        commentsField = findViewById(R.id.commentsEt);
+        sendCommentBtn = findViewById(R.id.sendCommentBtn);
     }
 }

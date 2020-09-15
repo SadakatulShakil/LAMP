@@ -164,6 +164,13 @@ public interface ApiInterface {
             @Query("from") String from,
             @Query("to") String to
     );
+
+    @Headers("accept: application/json")
+    @POST("/api/mobile/products/{product_id}/comments")
+    Call<String> postByCommentStoreQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String productId
+    );
 /*
     @GET()
     Call<List<UserPost>> getByPostUrl(
