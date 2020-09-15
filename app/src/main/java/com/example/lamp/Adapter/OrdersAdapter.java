@@ -1,6 +1,7 @@
 package com.example.lamp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.Activity.OrderDetailsActivity;
 import com.example.lamp.Orders.Datum;
 import com.example.lamp.R;
 
@@ -44,7 +46,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.viewHolder
         holder.orderTotalAmount.setText(totalPrice);
         holder.orderDestination.setText(fromDestination+" to "+toDestination);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderDetailsActivity.class);
+                intent.putExtra("orderInfo", orderInfo);
+                context.startActivity(intent);
 
+            }
+        });
 
     }
 
