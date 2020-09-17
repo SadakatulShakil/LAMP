@@ -1,5 +1,7 @@
 package com.example.lamp.Api;
 
+import com.example.lamp.Comments.CommentsResponse;
+import com.example.lamp.Comments.Datum;
 import com.example.lamp.OrderStore.OrderStore;
 import com.example.lamp.Orders.Orders;
 import com.example.lamp.Categories.Category;
@@ -165,11 +167,19 @@ public interface ApiInterface {
             @Query("to") String to
     );
 
-    @Headers("accept: application/json")
-    @POST("/api/mobile/products/{product_id}/comments")
-    Call<String> postByCommentStoreQuery(
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @GET("api/mobile/product/{product_id}/comments")
+    Call<CommentsResponse> getByCommentQuery(
             @Header("Authorization") String token,
             @Path("product_id") String productId
+    );
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @POST("api/mobile/product/{product_id}/comments")
+    Call<Datum> postByCommentStoreQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String productId,
+            @Query("message") String message
     );
 /*
     @GET()

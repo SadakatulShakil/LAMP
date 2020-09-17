@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.Orders.Datum;
 import com.example.lamp.Orders.Orders;
 import com.example.lamp.Adapter.OrdersAdapter;
@@ -42,6 +43,7 @@ public class OrdersFragment extends Fragment {
     private ProgressBar progressBar;
     public static final String TAG = "Order";
     private Toolbar dToolbar;
+    private String userType = "";
 
     public OrdersFragment() {
         // Required empty public constructor
@@ -69,9 +71,36 @@ public class OrdersFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
-
+        getAuthUserData();
         getOrderList();
     }
+
+    private void getAuthUserData() {
+
+        if (retrievedToken != null) {
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+
+            Call<UpdateUserInfo> call = api.getByAuthQuery("Bearer " + retrievedToken);
+            call.enqueue(new Callback<UpdateUserInfo>() {
+                @Override
+                public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
+                    if (response.code() == 200) {
+                        UpdateUserInfo updateUserInfo = response.body();
+
+                            userType = updateUserInfo.getType();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UpdateUserInfo> call, Throwable t) {
+                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
+                }
+            });
+        }
+    }
+
 
     private void getOrderList() {
         if (retrievedToken != null) {
@@ -91,8 +120,8 @@ public class OrdersFragment extends Fragment {
                         datumArrayList.clear();
 
                         datumArrayList.addAll(orderInfo.getData());
-                        mOrderAdapter = new OrdersAdapter(context, datumArrayList);
-                        orderRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, true));
+                        mOrderAdapter = new OrdersAdapter(context, datumArrayList,userType);
+                        orderRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                         orderRecyclerView.setAdapter(mOrderAdapter);
                         mOrderAdapter.notifyDataSetChanged();
                         Log.d(TAG, "onResponse: order " + datumArrayList.size());

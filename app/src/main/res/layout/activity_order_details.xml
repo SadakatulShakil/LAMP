@@ -27,26 +27,33 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <ImageView
-            android:id="@+id/image1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_add_photo"
+            android:id="@+id/previewImage"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/border_round"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <TextView
             android:id="@+id/productTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Product Title"
+            android:layout_margin="5dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/image1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/previewImage" />
 
 
         <LinearLayout
@@ -60,7 +67,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image1">
+            app:layout_constraintTop_toBottomOf="@+id/productTitle">
 
             <TextView
                 android:id="@+id/quantityTv"
@@ -128,7 +135,7 @@
 
         </LinearLayout>
 
-        <Button
+        <!--<Button
             android:id="@+id/paymentCallBTN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -166,7 +173,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

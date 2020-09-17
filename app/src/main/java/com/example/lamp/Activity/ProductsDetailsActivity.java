@@ -15,14 +15,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.Adapter.CommentsAdapter;
+import com.example.lamp.Adapter.OrdersAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
+import com.example.lamp.Comments.CommentsResponse;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.ProductsInfo.Datum;
 import com.example.lamp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +49,9 @@ public class ProductsDetailsActivity extends AppCompatActivity {
     private FloatingActionButton update;
     private EditText commentsField;
     private Button sendCommentBtn;
+    private RecyclerView commentsRecyclerView;
+    private CommentsAdapter mCommentsAdapter;
+    private ArrayList<com.example.lamp.Comments.Datum> commentsArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
 
     }
 
+
     private void loadAuthData() {
         if (retrievedToken != null) {
             Retrofit retrofit = RetrofitClient.getRetrofitClient();
@@ -73,7 +84,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
                         userType = updateUserInfo.getType();
-                        if(userType.equals("wholeseller")){
+                        if(userType.equals("whole seller")){
                             delete.setText("Order now!");
                             delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -95,7 +106,30 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                                     sendCommentBtn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                             ///////////////////Do comment section task here /////////////////////
+                                            ///////////////////Do comment section task here /////////////////////
+                                            if (retrievedToken != null) {
+                                                Retrofit retrofit = RetrofitClient.getRetrofitClient();
+                                                ApiInterface api = retrofit.create(ApiInterface.class);
+
+                                                Call<com.example.lamp.Comments.Datum> call = api.postByCommentStoreQuery("Bearer " + retrievedToken,
+                                                        productData.getId(),commentsField.getText().toString().trim());
+                                                call.enqueue(new Callback<com.example.lamp.Comments.Datum>() {
+                                                    @Override
+                                                    public void onResponse(Call<com.example.lamp.Comments.Datum> call, Response<com.example.lamp.Comments.Datum> response) {
+                                                        if(response.code() == 200){
+                                                            commentsField.setText("");
+                                                            Toast.makeText(ProductsDetailsActivity.this, "Your comment Added Successfully !", Toast.LENGTH_SHORT).show();
+                                                            loadCommentsData( productData.getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<com.example.lamp.Comments.Datum> call, Throwable t) {
+                                                        Log.d(TAG, "onFailure: "+ t.getMessage());
+                                                        Toast.makeText(ProductsDetailsActivity.this, "Failure: "+ t.getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                            }
                                         }
                                     });
                                 }
@@ -202,13 +236,49 @@ public class ProductsDetailsActivity extends AppCompatActivity {
             }
         });
 
+        loadCommentsData(productData.getId());
+
+    }
+
+    private void loadCommentsData(String id) {
+
+        if (retrievedToken != null) {
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+
+            Call<CommentsResponse> call = api.getByCommentQuery("Bearer " + retrievedToken, id);
+
+            call.enqueue(new Callback<CommentsResponse>() {
+                @Override
+                public void onResponse(Call<CommentsResponse> call, Response<CommentsResponse> response) {
+
+                    if (response.code() == 200) {
+                        CommentsResponse commentsResponse = response.body();
+
+                        commentsArrayList.clear();
+
+                        commentsArrayList.addAll(commentsResponse.getData());
+                        mCommentsAdapter = new CommentsAdapter(ProductsDetailsActivity.this, commentsArrayList);
+                        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(ProductsDetailsActivity.this));
+                        commentsRecyclerView.setAdapter(mCommentsAdapter);
+                        mCommentsAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CommentsResponse> call, Throwable t) {
+
+                }
+            });
+
+        }
     }
 
     private void inItView() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dToolbar = findViewById(R.id.toolbar);
         }
-
+        commentsArrayList = new ArrayList<>();
         previewImage = findViewById(R.id.previewImage);
         thumbnail1 = findViewById(R.id.thumbnail1);
         thumbnail2 = findViewById(R.id.thumbnail2);
@@ -224,5 +294,6 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         price = findViewById(R.id.priceTv);
         commentsField = findViewById(R.id.commentsEt);
         sendCommentBtn = findViewById(R.id.sendCommentBtn);
+        commentsRecyclerView = findViewById(R.id.recyclerViewForCommentList);
     }
 }

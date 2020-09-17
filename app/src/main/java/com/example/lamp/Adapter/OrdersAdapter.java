@@ -19,10 +19,12 @@ import java.util.ArrayList;
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.viewHolder> {
     private Context context;
     private ArrayList<Datum> orderArrayList;
+    private String userType;
 
-    public OrdersAdapter(Context context, ArrayList<Datum> orderArrayList) {
+    public OrdersAdapter(Context context, ArrayList<Datum> orderArrayList, String userType) {
         this.context = context;
         this.orderArrayList = orderArrayList;
+        this.userType = userType;
     }
 
     @NonNull
@@ -38,12 +40,21 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.viewHolder
         final Datum orderInfo = orderArrayList.get(position);
         String unit = orderInfo.getUnit();
         String quantity = String.valueOf(orderInfo.getQuantity());
-        String totalPrice = String.valueOf(orderInfo.getTotalPrice());
+        int totalPrice = orderInfo.getTotalPrice();
+        int unitCharge = orderInfo.getUnitCharge();
+        String actualPriceFarmer = String.valueOf(totalPrice - (unitCharge*orderInfo.getQuantity()));
+        String actualPriceWholeSeller = String.valueOf(totalPrice);
         String fromDestination = orderInfo.getFrom();
         String toDestination = orderInfo.getTo();
         holder.orderName.setText(orderInfo.getName());
         holder.orderQuantity.setText(quantity+" "+unit);
-        holder.orderTotalAmount.setText(totalPrice);
+        if(userType.equals("farmer")){
+
+            holder.orderTotalAmount.setText(actualPriceFarmer);
+        }else if(userType.equals("whole seller")){
+
+            holder.orderTotalAmount.setText(actualPriceWholeSeller);
+        }
         holder.orderDestination.setText(fromDestination+" to "+toDestination);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -61,7 +61,7 @@ public class UserInterfaceContainerActivity extends AppCompatActivity {
                         if (response.code() == 200) {
                             UpdateUserInfo updateUserInfo = response.body();
                             userType = updateUserInfo.getType();
-                            if(userType.equals("wholeseller")){
+                            if(userType.equals("whole seller")){
                                 bottomNavView.getMenu().removeItem(R.id.uploadNv);
                             }
                         }

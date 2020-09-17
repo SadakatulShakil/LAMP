@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private String retrievedToken;
     private Datum orderData;
     public static final String TAG = "orderDetails";
+    private String actualTotalPrice="";
     private ArrayList<com.example.lamp.ProductsInfo.Datum> datumArrayList = new ArrayList<>();
 
     @Override
@@ -47,20 +49,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
         orderData = (Datum) intent.getSerializableExtra("orderInfo");
         preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
+        getAuthUserData();
         getProductsData();
-        String quantity = String.valueOf(orderData.getQuantity());
-        String unitPrice = String.valueOf(orderData.getUnitPrice());
-        String unit = orderData.getUnit();
-        String unitCharge = String.valueOf(orderData.getUnitCharge());
-        String totalPrice = String.valueOf(orderData.getTotalPrice());
-        String from = orderData.getFrom();
-        String to = orderData.getTo();
-        productQuantity.setText(quantity+" "+unit);
-        productUnitPrice.setText(unitPrice+"৳/"+unit);
-        productUnitCharge.setText(unitCharge+"৳/"+unit);
-        productTotalPrice.setText(totalPrice+"৳");
-        deliveryRoot.setText(from+" to "+to);
+
+
     }
+
 
     private void getAuthUserData() {
 
@@ -74,7 +68,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
                     if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
-
+                        String userType = updateUserInfo.getType();
+                        Log.d(TAG, "onResponse: user type"+userType);
+                        setOrderDetails(userType);
                     }
                 }
 
@@ -85,6 +81,36 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void setOrderDetails(String userType) {
+
+        int quantityNumber = orderData.getQuantity();
+        String quantity = String.valueOf(quantityNumber);
+        int unitChargeNumber = orderData.getUnitCharge();
+        String unitCharge = String.valueOf(unitChargeNumber);
+        int unitPriceNumber = orderData.getUnitPrice();
+        String unitPrice = String.valueOf(unitPriceNumber);
+        int totalPriceNumber = orderData.getTotalPrice();
+        String from = orderData.getFrom();
+        String to = orderData.getTo();
+        int farmerTotalPrice = (totalPriceNumber - (unitChargeNumber*quantityNumber));
+        Log.d(TAG, "SetOrderDetails: "+farmerTotalPrice);
+        productUnitPrice.setText("Unit Price: "+unitPrice+"৳");
+        productQuantity.setText("Quantity: "+quantity);
+        productUnitCharge.setText("Unit Charge: "+unitCharge+"৳");
+        deliveryRoot.setText(from+" to "+ to);
+
+        if(userType.equals("farmer")){
+            productUnitCharge.setVisibility(View.GONE);
+            actualTotalPrice = String.valueOf(farmerTotalPrice);
+
+        }else if(userType.equals("whole seller")){
+            productUnitCharge.setVisibility(View.VISIBLE);
+            actualTotalPrice = String.valueOf(totalPriceNumber);
+        }
+
+        productTotalPrice.setText("Total Price: "+actualTotalPrice+"৳");
     }
 
     private void getProductsData() {
@@ -121,6 +147,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         });
 
     }
+
     private void inItView() {
         productTitle = findViewById(R.id.productTitle);
         productUnitPrice = findViewById(R.id.unitPriceTv);
@@ -128,8 +155,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         productQuantity = findViewById(R.id.quantityTv);
         productTotalPrice = findViewById(R.id.totalPriceTv);
         deliveryRoot = findViewById(R.id.deliveryRootTv);
-        productThumbImage = findViewById(R.id.image1);
-        paymentConfirmBtn = findViewById(R.id.paymentCallBTN);
-        orderCancelBtn = findViewById(R.id.cancelCallBTN);
+        productThumbImage = findViewById(R.id.previewImage);
+        /*paymentConfirmBtn = findViewById(R.id.paymentCallBTN);
+        orderCancelBtn = findViewById(R.id.cancelCallBTN);*/
     }
 }
