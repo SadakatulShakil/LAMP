@@ -1,5 +1,7 @@
 package com.example.lamp.Api;
 
+import com.example.lamp.AuctionList.AuctionShowResponse;
+import com.example.lamp.BidAuction.BidAuctionResponse;
 import com.example.lamp.Comments.CommentsResponse;
 import com.example.lamp.Comments.Datum;
 import com.example.lamp.OrderStore.OrderStore;
@@ -180,6 +182,32 @@ public interface ApiInterface {
             @Header("Authorization") String token,
             @Path("product_id") String productId,
             @Query("message") String message
+    );
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @POST("/api/mobile/product/{product_id}/auctions")
+    Call<BidAuctionResponse> postByBidAuctionStoreQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String pathProductId,
+            @Query("user_id") String userId,
+            @Query("product_id") String productId,
+            @Query("message") String message,
+            @Query("from") String from,
+            @Query("to") String to,
+            @Query("stock") int stock,
+            @Query("min_bid_price") double min_bid_price,
+            @Query("unit") String unit,
+            @Query("total_charge") int total_charge,
+            @Query("unit_charge") int unit_charge,
+            @Query("amount") double amount,
+            @Query("status") String status
+    );
+
+    @Headers("accept: application/json, content-type: multipart/form-data")
+    @GET("/api/mobile/product/{product_id}/auctions")
+    Call<AuctionShowResponse> getByAuctionQuery(
+            @Header("Authorization") String token,
+            @Path("product_id") String product_id
     );
 /*
     @GET()

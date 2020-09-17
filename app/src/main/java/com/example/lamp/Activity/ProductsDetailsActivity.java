@@ -41,7 +41,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
     private ImageView previewImage, thumbnail1, thumbnail2, thumbnail3;
     private TextView delete, title, description, price, stock, startDate, endDate;
     private Toolbar dToolbar;
-    private String userType = "";
+    private String userType = "",productType="";
     private Datum productData;
     private SharedPreferences preferences;
     private String retrievedToken;
@@ -84,7 +84,59 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
                         userType = updateUserInfo.getType();
-                        if(userType.equals("whole seller")){
+                        productType = productData.getType();
+                        if(userType.equals("whole seller") && productType.equals("live_auction")){
+                            delete.setText("Bid Now!");
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ProductsDetailsActivity.this, BidProductActivity.class);
+                                    intent.putExtra("productData", productData);
+                                    startActivity(intent);
+                                }
+                            });
+                            update.setImageDrawable(getResources().getDrawable(R.drawable.ic_message));
+
+                            update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    commentsField.setVisibility(View.VISIBLE);
+                                    sendCommentBtn.setVisibility(View.VISIBLE);
+
+                                    sendCommentBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ///////////////////Do comment section task here /////////////////////
+                                            if (retrievedToken != null) {
+                                                Retrofit retrofit = RetrofitClient.getRetrofitClient();
+                                                ApiInterface api = retrofit.create(ApiInterface.class);
+
+                                                Call<com.example.lamp.Comments.Datum> call = api.postByCommentStoreQuery("Bearer " + retrievedToken,
+                                                        productData.getId(),commentsField.getText().toString().trim());
+                                                call.enqueue(new Callback<com.example.lamp.Comments.Datum>() {
+                                                    @Override
+                                                    public void onResponse(Call<com.example.lamp.Comments.Datum> call, Response<com.example.lamp.Comments.Datum> response) {
+                                                        if(response.code() == 200){
+                                                            commentsField.setText("");
+                                                            Toast.makeText(ProductsDetailsActivity.this, "Your comment Added Successfully !", Toast.LENGTH_SHORT).show();
+                                                            loadCommentsData( productData.getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<com.example.lamp.Comments.Datum> call, Throwable t) {
+                                                        Log.d(TAG, "onFailure: "+ t.getMessage());
+                                                        Toast.makeText(ProductsDetailsActivity.this, "Failure: "+ t.getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        else if(userType.equals("whole seller")){
                             delete.setText("Order now!");
                             delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -135,6 +187,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
                     }
                 }
 
