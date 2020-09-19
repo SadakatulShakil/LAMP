@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,12 @@ import java.util.ArrayList;
 public class AuctionListAdapter extends RecyclerView.Adapter<AuctionListAdapter.viewHolder> {
     private Context context;
     private ArrayList<Datum> auctionArrayList;
+    private String userType;
 
-    public AuctionListAdapter(Context context, ArrayList<Datum> auctionArrayList) {
+    public AuctionListAdapter(Context context, ArrayList<Datum> auctionArrayList, String userType) {
         this.context = context;
         this.auctionArrayList = auctionArrayList;
+        this.userType = userType;
     }
 
     @NonNull
@@ -38,8 +41,19 @@ public class AuctionListAdapter extends RecyclerView.Adapter<AuctionListAdapter.
         double amount = auctionInfo.getAmount();
         int totalCharge = auctionInfo.getTotalCharge();
         double actualAmount = amount - totalCharge;
+        String pActualAmount = String.valueOf(actualAmount);
         String pAmount = String.valueOf(amount);
-        holder.auctionAmountTv.setText(pAmount);
+
+
+        if(userType.equals("farmer")){
+            holder.acceptBtn.setVisibility(View.VISIBLE);
+            holder.auctionAmountTv.setText(pActualAmount);
+
+        }
+        else if(userType.equals("whole seller")){
+            holder.acceptBtn.setVisibility(View.GONE);
+            holder.auctionAmountTv.setText(pAmount);
+        }
 
     }
 
@@ -50,11 +64,13 @@ public class AuctionListAdapter extends RecyclerView.Adapter<AuctionListAdapter.
 
     public class viewHolder extends RecyclerView.ViewHolder {
         private TextView auctionTimeTv, auctionAmountTv, auctionMessageTv;
+        private Button acceptBtn;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             auctionTimeTv = itemView.findViewById(R.id.auctionTime);
             auctionAmountTv = itemView.findViewById(R.id.auctionAmount);
             auctionMessageTv = itemView.findViewById(R.id.auctionMessage);
+            acceptBtn = itemView.findViewById(R.id.acceptAuctionBtn);
         }
     }
 }

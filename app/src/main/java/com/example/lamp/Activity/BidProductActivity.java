@@ -45,7 +45,7 @@ public class BidProductActivity extends AppCompatActivity {
     private String retrievedToken, pStock, mBidPrice, pUnitPrice, unit, productId;
     private int actualStock, unitCharge, totalCharge;
     private double actualUnitPrice, minBidPrice,pTotalAmount;
-    private String userId = "", status = "pending", auctionId, totalAmount;
+    private String userId = "", userType = "", auctionId, totalAmount;
     private ImageView previewImage;
     private TextView minimumBidPrice, stock, unitPrice;
     private EditText message, yourBidPrice;
@@ -133,7 +133,7 @@ public class BidProductActivity extends AppCompatActivity {
 
                         mAuctionArrayList.clear();
                         mAuctionArrayList.addAll(auctionShowResponse.getData());
-                        auctionListAdapter = new AuctionListAdapter(BidProductActivity.this, mAuctionArrayList);
+                        auctionListAdapter = new AuctionListAdapter(BidProductActivity.this, mAuctionArrayList,userType);
                         auctionRecyclerView.setLayoutManager(new LinearLayoutManager(BidProductActivity.this));
                         auctionRecyclerView.setAdapter(auctionListAdapter);
                         auctionListAdapter.notifyDataSetChanged();
@@ -162,13 +162,13 @@ public class BidProductActivity extends AppCompatActivity {
         pStock = String.valueOf(actualStock);
         pUnitPrice = String.valueOf(actualUnitPrice);
         unit = productData.getUnit();
-        minimumBidPrice.setText("Minimum Bid Price: " + mBidPrice + "৳");
         stock.setText("Stock: " + pStock + " " + unit);
         unitPrice.setText("Unit Price" + pUnitPrice + "৳/" + unit);
         productId = productData.getId();
         unitCharge = 10;
         totalCharge = (productData.getStock() * unitCharge);
         pTotalAmount = minBidPrice+totalCharge;
+        minimumBidPrice.setText("Minimum Bid Price: " + pTotalAmount + "৳");
         totalAmount = String.valueOf(pTotalAmount);
         yourBidPrice.setText(totalAmount);
 
@@ -188,6 +188,8 @@ public class BidProductActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         UpdateUserInfo updateUserInfo = response.body();
                         userId = updateUserInfo.getId();
+                        userType = updateUserInfo.getType();
+
 
                     }
                 }

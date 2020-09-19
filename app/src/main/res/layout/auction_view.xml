@@ -64,6 +64,20 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
+                <Button
+                    android:id="@+id/acceptAuctionBtn"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/round_txt_design"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Accept"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
