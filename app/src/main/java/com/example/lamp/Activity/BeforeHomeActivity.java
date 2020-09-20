@@ -86,7 +86,7 @@ public class BeforeHomeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rbType1 = (RadioButton) updateUserType.findViewById(updateUserType.getCheckedRadioButtonId());
-                userType = (String) rbType1.getText();
+               userType = (String) rbType1.getText();
 
                 Toast.makeText(BeforeHomeActivity.this, userType+ " is Clicked!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreate: " +userType);
@@ -111,23 +111,31 @@ public class BeforeHomeActivity extends AppCompatActivity {
                 public void onResponse(Call<UpdateUserInfo> call, Response<UpdateUserInfo> response) {
                     if(response.code() == 200){
                         updateUserInfo = response.body();
-                        nameET.setText(updateUserInfo.getName());
-                        emailET.setText(updateUserInfo.getEmail());
-                        phoneET.setText(updateUserInfo.getPhone());
+                        String name  = updateUserInfo.getName();
+                        nameET.setText(name);
+                        String email = updateUserInfo.getEmail();
+                        emailET.setText(email);
+                        String phone = updateUserInfo.getPhone();
+                        phoneET.setText(phone);
+                        userType = updateUserInfo.getType();
 
-                        if(updateUserInfo.getType().equals("farmer")){
+                        if(userType.equals("farmer")){
                             rb1.setChecked(true);
-                        }else if(updateUserInfo.getType().equals("wholeseller")){
+                        }else if(userType.equals("whole seller")){
                             rb2.setChecked(true);
-                        }else if(updateUserInfo.getType().equals("agent")){
+                        }else if(userType.equals("agent")){
                             rb3.setChecked(true);
                         }
                         Toast.makeText(BeforeHomeActivity.this, "user type: "+updateUserInfo.getType(), Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onResponse: " + updateUserInfo.getType());
-                        cityET.setText(updateUserInfo.getAddress().getCity());
-                        zipET.setText(updateUserInfo.getAddress().getZip());
-                        locationET.setText(updateUserInfo.getAddress().getLocation());
-                        countryET.setText(updateUserInfo.getAddress().getCountry());
+                        String city = updateUserInfo.getAddress().getCity();
+                        cityET.setText(city);
+                        String zip = updateUserInfo.getAddress().getZip();
+                        zipET.setText(zip);
+                        String location = updateUserInfo.getAddress().getLocation();
+                        locationET.setText(location);
+                        String country = updateUserInfo.getAddress().getCountry();
+                        countryET.setText(country);
 
                         /*Picasso.get().load(updateUserInfo.getPhoto()).into(proImageView);
                         Picasso.get().load(updateUserInfo.getNid()).into(nidImageView);*/
@@ -185,7 +193,8 @@ public class BeforeHomeActivity extends AppCompatActivity {
 
                         ApiInterface api = retrofit.create(ApiInterface.class);
 
-                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+retrievedToken, type, location, city, zip, country, phone, email, requestBody, requestBody1, name);
+                        Call<UpdateUserInfo> call = api.postByUpdateInfo("Bearer "+retrievedToken, type, location,
+                                city, zip, country, phone, email, requestBody, requestBody1, name);
 
                         call.enqueue(new Callback<UpdateUserInfo>() {
                             @Override

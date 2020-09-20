@@ -207,7 +207,7 @@
                     android:layout_marginLeft="8dp"
                     android:buttonTint="@color/colorAccent"
                     android:padding="8dp"
-                    android:text="Farmer"
+                    android:text="farmer"
                     android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black" />
@@ -221,7 +221,7 @@
                     android:buttonTint="@color/colorAccent"
                     android:padding="8dp"
                     android:textStyle="bold"
-                    android:text="WholeSeller"
+                    android:text="whole seller"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black" />
 
@@ -234,7 +234,7 @@
                     android:padding="8dp"
                     android:textStyle="bold"
                     android:layout_marginLeft="8dp"
-                    android:text="Agent"
+                    android:text="agent"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black" />
 

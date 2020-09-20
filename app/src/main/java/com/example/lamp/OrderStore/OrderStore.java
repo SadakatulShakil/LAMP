@@ -46,10 +46,10 @@ public class OrderStore implements Serializable {
     private Integer quantity;
     @SerializedName("unit_price")
     @Expose
-    private Integer unitPrice;
+    private Double unitPrice;
     @SerializedName("total_price")
     @Expose
-    private Integer totalPrice;
+    private Double totalPrice;
     @SerializedName("payments")
     @Expose
     private Payments payments;
@@ -162,19 +162,19 @@ public class OrderStore implements Serializable {
         this.quantity = quantity;
     }
 
-    public Integer getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Integer unitPrice) {
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Integer totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
