@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +19,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.Adapter.AuctionListAdapter;
 import com.example.lamp.Adapter.CommentsAdapter;
 import com.example.lamp.Adapter.OrdersAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
+import com.example.lamp.AuctionList.AuctionShowResponse;
 import com.example.lamp.Comments.CommentsResponse;
 import com.example.lamp.FullUserInfo.UpdateUserInfo;
 import com.example.lamp.ProductsInfo.Datum;
@@ -39,7 +42,7 @@ import retrofit2.Retrofit;
 public class ProductsDetailsActivity extends AppCompatActivity {
 
     private ImageView previewImage, thumbnail1, thumbnail2, thumbnail3;
-    private TextView delete, title, description, price, stock, startDate, endDate;
+    private TextView delete, title, description, price, stock, startDate, endDate,notify_count;
     private Toolbar dToolbar;
     private String userType = "",productType="";
     private Datum productData;
@@ -52,6 +55,9 @@ public class ProductsDetailsActivity extends AppCompatActivity {
     private RecyclerView commentsRecyclerView;
     private CommentsAdapter mCommentsAdapter;
     private ArrayList<com.example.lamp.Comments.Datum> commentsArrayList;
+    private RelativeLayout notificationActionBt;
+    private int notificationCount;
+    private ArrayList<com.example.lamp.AuctionList.Datum> mAuctionArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +73,42 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         retrievedToken = preferences.getString("TOKEN", null);
         loadAuthData();
         loadProductData();
+        loadAuctionList(productData.getId());
         ClickEvents();
 
+    }
+
+    private void loadAuctionList(String id) {
+        if (retrievedToken != null) {
+            Retrofit retrofit = RetrofitClient.getRetrofitClient();
+            ApiInterface api = retrofit.create(ApiInterface.class);
+            Call<AuctionShowResponse> call = api.getByAuctionQuery("Bearer " + retrievedToken, id);
+
+            call.enqueue(new Callback<AuctionShowResponse>() {
+                @Override
+                public void onResponse(Call<AuctionShowResponse> call, Response<AuctionShowResponse> response) {
+                    Log.d(TAG, "onResponse: " + response.code());
+                    if (response.code() == 200) {
+                        AuctionShowResponse auctionShowResponse = response.body();
+
+                        mAuctionArrayList.clear();
+                        mAuctionArrayList.addAll(auctionShowResponse.getData());
+                        notificationCount = mAuctionArrayList.size();
+                        String countValue = String.valueOf(notificationCount);
+                        notify_count.setText(countValue);
+                        Log.d(TAG, "onResponse: "+countValue);
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AuctionShowResponse> call, Throwable t) {
+                    Toast.makeText(ProductsDetailsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onFailure: " + "message: " + t.getMessage());
+                }
+            });
+
+        }
     }
 
 
@@ -85,7 +125,18 @@ public class ProductsDetailsActivity extends AppCompatActivity {
                         UpdateUserInfo updateUserInfo = response.body();
                         userType = updateUserInfo.getType();
                         productType = productData.getType();
-                        if(userType.equals("whole seller") && productType.equals("live_auction")){
+                        if(userType.equals("farmer") && productType.equals("live_auction")){
+                            notificationActionBt.setVisibility(View.VISIBLE);
+                            notificationActionBt.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ProductsDetailsActivity.this, AuctionActionActivity.class);
+                                    intent.putExtra("productData", productData);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                        else if(userType.equals("whole seller") && productType.equals("live_auction")){
                             delete.setText("Bid Now!");
                             delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -348,5 +399,7 @@ public class ProductsDetailsActivity extends AppCompatActivity {
         commentsField = findViewById(R.id.commentsEt);
         sendCommentBtn = findViewById(R.id.sendCommentBtn);
         commentsRecyclerView = findViewById(R.id.recyclerViewForCommentList);
+        notificationActionBt = findViewById(R.id.auctionNotificationAction);
+        notify_count = findViewById(R.id.notificationCountTv);
     }
 }

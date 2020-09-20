@@ -63,7 +63,7 @@ public class LiveAuctionFragment extends Fragment {
     private SharedPreferences preferences;
     private Intent oneIntent, twoIntent, threeIntent;
     private File oneFile, twoFile, threeFile;
-    public static final String TAG = "Live";
+    public static final String TAG = "PreBook";
     private Uri oneImageUri, twoImageUri, threeImageUri;
     private ProgressBar progressBar;
     private Spinner unitSpinner, categorySpinner;
@@ -71,9 +71,6 @@ public class LiveAuctionFragment extends Fragment {
     private ArrayList<CategoryType> mProductCategoryList;
     private CategoryAdapter mCategoryAdapter;
     private UnitAdapter mUnitAdapter;
-    private String pTitle, pSlug, pDescription, pExpireAt, pStartAt, pUnit, pAgentId, pCategory, type = "live_auction";
-    private int pStock;
-    private double pUnitPrice;
 
     public LiveAuctionFragment() {
         // Required empty public constructor
@@ -96,31 +93,17 @@ public class LiveAuctionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         inItUnitList();
         inItCategoryList();
 
         initView(view);
         preferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
         retrievedToken = preferences.getString("TOKEN", null);
-        dToolbar.setTitle(getString(R.string.live_fixed));
+        dToolbar.setTitle(getString(R.string.prebook_fixed));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             dToolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
-
-        /////////declaration//////////
-        type = "live_auction";
-        pTitle = title.getText().toString().trim();
-        pDescription = description.getText().toString().trim();
-        pSlug = slug.getText().toString().trim();
-        pStock = Integer.parseInt(stock.getText().toString().trim());
-        pUnitPrice = Double.parseDouble(unitPrice.getText().toString().trim());
-        showMinimumBidPrice(pStock, pUnitPrice);
-        pUnit = productUnit;
-        pAgentId = agentId.getText().toString().trim();
-        pCategory = productCategory;
-        pStartAt = startedDate.getText().toString().trim();
-        pExpireAt = expiredDate.getText().toString().trim();
-        ///////declaration///////////
 
         /////////ImagePicker//////////
         oneImage.setOnClickListener(new View.OnClickListener() {
@@ -151,9 +134,9 @@ public class LiveAuctionFragment extends Fragment {
                 DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.YEAR,year);
+                        calendar.set(Calendar.MONTH,month);
+                        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
                         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -163,13 +146,13 @@ public class LiveAuctionFragment extends Fragment {
 
                                 SimpleDateFormat sampleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
                                 startedDate.setText(sampleDateFormat.format(calendar.getTime()));
-                                Log.d(TAG, "Start Time: " + startedDate);
+                                Log.d(TAG, "Start Time: "+startedDate);
                             }
                         };
                         new TimePickerDialog(context, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
                     }
                 };
-                new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         expiredDate.setOnClickListener(new View.OnClickListener() {
@@ -179,9 +162,9 @@ public class LiveAuctionFragment extends Fragment {
                 DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.YEAR,year);
+                        calendar.set(Calendar.MONTH,month);
+                        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
                         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -191,29 +174,30 @@ public class LiveAuctionFragment extends Fragment {
 
                                 SimpleDateFormat sampleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
                                 expiredDate.setText(sampleDateFormat.format(calendar.getTime()));
-                                Log.d(TAG, "End Time: " + expiredDate);
+                                Log.d(TAG, "End Time: "+expiredDate);
                             }
                         };
                         new TimePickerDialog(context, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
                     }
                 };
-                new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(context, dateSetListener, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
 
         /////////datePicker//////////
 
-        uploadProductBtn.setOnClickListener(new View.OnClickListener() {
+        uploadProductBtn.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick (View v){
                 progressBar.setVisibility(View.VISIBLE);
                 StoreProduct();
             }
         });
+
     }
-
-
     private void inItCategoryList() {
         mProductCategoryList = new ArrayList<>();
         mProductCategoryList.add(new CategoryType("Select Category..."));
@@ -287,6 +271,19 @@ public class LiveAuctionFragment extends Fragment {
     }
 
     private void StoreProduct() {
+        String type = "live_auction";
+        String pTitle = title.getText().toString().trim();
+        String pDescription = description.getText().toString().trim();
+        String pSlug = slug.getText().toString().trim();
+        int pStock = Integer.parseInt(stock.getText().toString().trim());
+        double pUnitPrice = Double.parseDouble(unitPrice.getText().toString().trim());
+        String pUnit = productUnit;
+        String pAgentId = agentId.getText().toString().trim();
+        String pCategory = productCategory;
+        String pStartAt = startedDate.getText().toString().trim();
+        String pExpireAt = expiredDate.getText().toString().trim();
+        String mBidPrice = String.valueOf((pUnitPrice*pStock));
+        minimumBidPrice.setText(mBidPrice);
 
         oneFile = new File(getRealPathFromUri(oneImageUri));
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), oneFile);
@@ -332,13 +329,6 @@ public class LiveAuctionFragment extends Fragment {
 
     }
 
-    private void showMinimumBidPrice(int pStock, double pUnitPrice) {
-        double pMinimumBidPrice = (pStock * pUnitPrice);
-        String miniBid = String.valueOf(pMinimumBidPrice);
-        minimumBidPrice.setText(miniBid);
-
-    }
-
     private void initView(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dToolbar = view.findViewById(R.id.toolbar);
@@ -375,7 +365,7 @@ public class LiveAuctionFragment extends Fragment {
 
                 productUnit = clickedUnit.getUnit();
 
-                Toast.makeText(context, productUnit + " is selected !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, productUnit +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -391,7 +381,7 @@ public class LiveAuctionFragment extends Fragment {
 
                 productCategory = clickedCategory.getCategory();
 
-                Toast.makeText(context, productCategory + " is selected !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, productCategory +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -400,5 +390,4 @@ public class LiveAuctionFragment extends Fragment {
             }
         });
     }
-
 }
