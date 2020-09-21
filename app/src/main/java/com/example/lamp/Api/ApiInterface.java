@@ -147,7 +147,7 @@ public interface ApiInterface {
 
     @Headers("accept: application/json")
     @GET("/api/mobile/orders")
-    Call<Orders> getByOrdersQuery(
+    Call<Orders>  getByOrdersQuery(
             @Header("Authorization") String token
     );
 

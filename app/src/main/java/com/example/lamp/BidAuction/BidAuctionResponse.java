@@ -11,45 +11,59 @@ public class BidAuctionResponse implements Serializable {
     @SerializedName("_id")
     @Expose
     private String id;
+
     @SerializedName("user_id")
     @Expose
     private String userId;
+
     @SerializedName("product_id")
     @Expose
     private String productId;
+
     @SerializedName("message")
     @Expose
     private String message;
+
     @SerializedName("from")
     @Expose
-    private Object from;
+    private String from;
+
     @SerializedName("to")
     @Expose
     private String to;
+
     @SerializedName("stock")
     @Expose
     private Integer stock;
+
     @SerializedName("min_bid_price")
     @Expose
     private Double minBidPrice;
+
     @SerializedName("unit")
     @Expose
     private String unit;
+
     @SerializedName("unit_charge")
     @Expose
     private Integer unitCharge;
+
     @SerializedName("total_charge")
     @Expose
     private Integer totalCharge;
+
     @SerializedName("amount")
     @Expose
     private Double amount;
+
     @SerializedName("status")
     @Expose
     private String status;
+
     @SerializedName("created_at")
     @Expose
     private String createdAt;
+
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
@@ -86,11 +100,11 @@ public class BidAuctionResponse implements Serializable {
         this.message = message;
     }
 
-    public Object getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Object from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
