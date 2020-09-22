@@ -334,6 +334,16 @@ public class LiveFixedFragment extends Fragment {
                         context.startActivity(intent);
                         getActivity().finish();
                     }
+
+                    else if(response.code() == 413){
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "Your Image size is too High!", Toast.LENGTH_LONG).show();
+                    }
+
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "Check your Data is Correct", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override

@@ -91,6 +91,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             }
+                            else{
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(SignUpActivity.this, "Check your Data is Correct", Toast.LENGTH_LONG).show();
+                            }
 
                         }
 

@@ -55,61 +55,73 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/logOutTv"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/imageLayout"
+    <RelativeLayout
+        android:id="@+id/activity_landing"
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar">
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/nidImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/border_round"
+            android:scaleType="fitXY"
+            android:src="@drawable/nid_demo"
+            />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/profile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/profileEditBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableRight="@drawable/ic_update"
-            android:drawablePadding="8dp"
-            android:text="Update"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/profileImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/profileImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/nidImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-70dp"
+            app:civ_border_width="5dp"
+            app:civ_border_color="@color/white"
+            android:src="@drawable/profile_demo"/>
 
         <TextView
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Astronist Shakil "
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_below="@+id/profileImage"
+            android:text="Astronist Shakil"
             android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+            android:gravity="center"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/userEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nidImage"
+            android:text="Edit"
+            android:textColor="@color/black"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:drawableLeft="@drawable/editor"
+            android:drawablePadding="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/imageLayout">
+        android:layout_below="@+id/activity_landing">
 
         <LinearLayout
             android:layout_width="match_parent"

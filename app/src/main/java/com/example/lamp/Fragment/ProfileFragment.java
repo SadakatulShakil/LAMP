@@ -3,6 +3,7 @@ package com.example.lamp.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +36,9 @@ import retrofit2.Retrofit;
 public class ProfileFragment extends Fragment {
 
     private Context context;
-    private TextView name, email, contact, type, location, zip, city, country, logOutBtn;
+    private TextView name, email, contact, type, location, zip, city, country, logOutBtn, updateUser;
     private CircleImageView proImage;
+    private ImageView nidImage;
     private String retrievedToken;
     private SharedPreferences preferences;
     public static final String TAG = "profile";
@@ -73,6 +76,12 @@ public class ProfileFragment extends Fragment {
                 userLogOut();
             }
         });
+        updateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -99,6 +108,7 @@ public class ProfileFragment extends Fragment {
                         country.setText(updateUserInfo.getAddress().getCountry());
 
                         Picasso.get().load(updateUserInfo.getPhoto()).into(proImage);
+                        Picasso.get().load(updateUserInfo.getNid()).into(nidImage);
 
                     }
                 }
@@ -155,7 +165,9 @@ public class ProfileFragment extends Fragment {
         city = view.findViewById(R.id.userCity);
         country = view.findViewById(R.id.userCountry);
         proImage = view.findViewById(R.id.profileImage);
+        nidImage = view.findViewById(R.id.nidImage);
         logOutBtn = view.findViewById(R.id.logOutTv);
+        updateUser = view.findViewById(R.id.userEdit);
 
     }
 }

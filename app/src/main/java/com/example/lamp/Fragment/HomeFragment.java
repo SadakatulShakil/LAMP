@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lamp.Activity.SignUpActivity;
 import com.example.lamp.Adapter.productsAdapter;
 import com.example.lamp.Api.ApiInterface;
 import com.example.lamp.Api.RetrofitClient;
@@ -173,6 +174,10 @@ public class HomeFragment extends Fragment {
                     }*/
 
 
+                }
+                else{
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(context, "Please Check your Internet connection!", Toast.LENGTH_LONG).show();
                 }
 
             }

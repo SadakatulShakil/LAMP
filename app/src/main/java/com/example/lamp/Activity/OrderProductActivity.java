@@ -134,6 +134,11 @@ public class OrderProductActivity extends AppCompatActivity {
                         finish();
                     }
 
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(OrderProductActivity.this, "Check your Input is Correct", Toast.LENGTH_LONG).show();
+                    }
+
                 }
 
                 @Override

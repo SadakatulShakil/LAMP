@@ -100,10 +100,13 @@ public class BidProductActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: " + response.code());
                     if (response.code() == 200) {
                         BidAuctionResponse bidAuctionResponse = response.body();
-                        message.setText("");
-                        yourBidPrice.setText("");
                         Toast.makeText(BidProductActivity.this, "Your Bid is successfully done", Toast.LENGTH_SHORT).show();
                         loadAuctionList(productId);
+                        message.setText("");
+                        yourBidPrice.setText("");
+                    }
+                    else{
+                        Toast.makeText(BidProductActivity.this, "Check your Input is Correct", Toast.LENGTH_LONG).show();
                     }
 
                 }

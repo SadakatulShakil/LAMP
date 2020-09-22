@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".Activity.AuctionActionActivity"></activity>
+        <activity android:name=".Activity.UpdateUserInfoActivity"></activity>
+        <activity android:name=".Activity.AuctionActionActivity" />
         <activity android:name=".Activity.BidProductActivity" />
         <activity android:name=".Activity.OrderDetailsActivity" />
         <activity android:name=".Activity.OrderProductActivity" />

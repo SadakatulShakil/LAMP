@@ -354,6 +354,10 @@ public class ProductUpdateActivity extends AppCompatActivity {
                         ProductUpdateActivity.this.startActivity(intent);
                         finish();
                     }
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(ProductUpdateActivity.this, "Check your insert Data is Correct", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override

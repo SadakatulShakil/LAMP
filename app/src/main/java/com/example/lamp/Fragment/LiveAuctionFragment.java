@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
 
+import com.example.lamp.Activity.SignUpActivity;
 import com.example.lamp.Activity.UserInterfaceContainerActivity;
 import com.example.lamp.Adapter.CategoryAdapter;
 import com.example.lamp.Adapter.UnitAdapter;
@@ -316,6 +317,16 @@ public class LiveAuctionFragment extends Fragment {
                         Intent intent = new Intent(context, UserInterfaceContainerActivity.class);
                         context.startActivity(intent);
                         getActivity().finish();
+                    }
+
+                    else if(response.code() == 413){
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "Your Image size is too High!", Toast.LENGTH_LONG).show();
+                    }
+
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "Check your Data is Correct", Toast.LENGTH_LONG).show();
                     }
                 }
 
